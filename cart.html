@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLibrary — Cart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="library-page cart-page">
+  <header class="site-header">
+    <div><span class="eyebrow">KLIBRARY</span><h1>Your Cart</h1></div>
+    <a class="back" href="genres.html">← The Shelves</a>
+  </header>
+  <main class="cart-main">
+    <p class="intro">You can keep up to two books in your cart.</p>
+    <section id="cartItems" class="cart-list"></section>
+    <p id="cartMessage" class="message"></p>
+    <div class="cart-summary">
+      <div><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
+      <div><span>Two-book discount</span><strong id="discount">− ₹0</strong></div>
+      <div class="cart-total"><span>Total</span><strong id="total">₹0</strong></div>
+      <p id="twoBookNote" class="two-book-note"></p>
+      <button id="placeOrderBtn" type="button" disabled>Place Order — Cash Payment</button>
+      <p id="orderResult" class="message success"></p>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="cart.js"></script>
+</body>
+</html>

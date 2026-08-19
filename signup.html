@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLibrary — Sign Up</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <div class="crest">K</div>
+    <p class="eyebrow">JOIN THE COLLECTION</p>
+    <h1>Create your account</h1>
+    <p class="subtitle">Your place in the KLibrary awaits.</p>
+
+    <form id="signupForm">
+      <label>Name</label>
+      <input id="signupName" type="text" placeholder="Your name" required>
+      <label>Email</label>
+      <input id="signupEmail" type="email" placeholder="your@email.com" required>
+      <label>Password</label>
+      <input id="signupPassword" type="password" placeholder="At least 6 characters" minlength="6" required>
+      <label>Confirm password</label>
+      <input id="signupConfirm" type="password" placeholder="Repeat your password" minlength="6" required>
+      <button type="submit">Create Account</button>
+      <p id="signupMessage" class="message"></p>
+    </form>
+
+    <p class="switch">Already a member? <a href="index.html">Return to login</a></p>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

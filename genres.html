@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLibrary — The Shelves</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="library-page">
+  <header class="site-header">
+    <div>
+      <span class="eyebrow">KLIBRARY</span>
+      <h1>The Shelves</h1>
+    </div>
+    <div class="header-actions"><a class="back" href="cart.html">Cart <span id="cartCount">0</span></a><button id="logoutBtn" class="logout">Log out</button></div>
+  </header>
+
+  <main class="genre-main">
+    <p id="welcome" class="welcome"></p>
+    <p class="intro">Choose a section of the library.</p>
+
+    <section class="genre-grid">
+      <a class="genre-card romantasy" href="romantasy.html">
+        <span class="card-symbol">❦</span>
+        <h2>Romantasy</h2>
+        <p>Fantasy Romance</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
+      <a class="genre-card thriller" href="thriller.html">
+        <span class="card-symbol">⌕</span>
+        <h2>Thrillers & Mystery</h2>
+        <p>Secrets, clues & suspense</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
+      <a class="genre-card selfhelp" href="selfhelp.html">
+        <span class="card-symbol">✦</span>
+        <h2>Self-Help</h2>
+        <p>Ideas for growing and learning</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
+      <a class="genre-card others" href="others.html">
+        <span class="card-symbol">❧</span>
+        <h2>Others</h2>
+        <p>Everything beyond the shelves</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="cart.js"></script>
+</body>
+</html>

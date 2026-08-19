@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLibrary — Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <div class="crest">K</div>
+    <p class="eyebrow">THE PRIVATE LIBRARY</p>
+    <h1>KLibrary</h1>
+    <p class="subtitle">A quiet place for stories, ideas, and discoveries.</p>
+
+    <form id="loginForm">
+      <label>Email</label>
+      <input id="loginEmail" type="email" placeholder="your@email.com" required>
+      <label>Password</label>
+      <input id="loginPassword" type="password" placeholder="••••••••" required>
+      <button type="submit">Enter the Library</button>
+      <p id="loginMessage" class="message"></p>
+    </form>
+
+    <p class="switch">New to KLibrary? <a href="signup.html">Create an account</a></p>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
