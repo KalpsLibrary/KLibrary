@@ -489,7 +489,13 @@ a:hover { color: #3f2e1f; }
     padding: 8px 10px;
   }
 
-  /* ================================
+  .cart-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+/* ================================
    SPECIAL EDITIONS — PREMIUM SHELF
    ================================ */
 
@@ -618,11 +624,4 @@ body.special-editions::before {
 .special-editions .add-to-cart:hover {
   background: #e0c47b;
 }
-
-
-
-  .cart-item {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-}
+```
