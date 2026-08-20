@@ -489,6 +489,138 @@ a:hover { color: #3f2e1f; }
     padding: 8px 10px;
   }
 
+  /* ================================
+   SPECIAL EDITIONS — PREMIUM SHELF
+   ================================ */
+
+body.special-editions {
+  color: #eee6d2;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(155,119,64,.12), transparent 35%),
+    linear-gradient(135deg, #0d0d0c, #171512 50%, #080807);
+}
+
+body.special-editions::before {
+  border-color: rgba(190,155,82,.45);
+}
+
+.special-editions .site-header {
+  border-bottom-color: rgba(190,155,82,.35);
+}
+
+.special-editions .site-header h1 {
+  color: #d4af5a;
+}
+
+.special-editions .eyebrow {
+  color: #c9a451;
+}
+
+.special-editions .back {
+  color: #d4af5a;
+  border-color: #8d6c32;
+  background: rgba(0,0,0,.35);
+}
+
+.special-editions .back:hover {
+  background: #c9a451;
+  color: #111;
+}
+
+.special-editions .shelf-heading .shelf-mark {
+  color: #d4af5a;
+  border-color: #b38b43;
+  background: rgba(0,0,0,.45);
+}
+
+.special-editions .shelf-heading h2 {
+  color: #eee6d2;
+}
+
+.special-editions .shelf-heading p {
+  color: #b8ad97;
+}
+
+.special-editions .book-count {
+  color: #c9a451;
+  border-bottom-color: rgba(190,155,82,.4);
+}
+
+.special-editions .book-card {
+  background: linear-gradient(145deg, #171614, #0e0e0d);
+  border-color: #765b2d;
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+}
+
+.special-editions .book-card:hover {
+  box-shadow: 0 18px 38px rgba(0,0,0,.65);
+  border-color: #b38b43;
+}
+
+.special-editions .book-spine {
+  background: rgba(155,119,64,.10);
+  border-right-color: #765b2d;
+  color: #d4af5a;
+}
+
+.special-editions .book-info h3 {
+  color: #eee6d2;
+}
+
+.special-editions .book-info p {
+  color: #aaa18e;
+}
+
+.special-editions .book-price {
+  color: #d4af5a;
+}
+
+/* The special-features section */
+.special-editions .special-features {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(190,155,82,.25);
+  color: #c8bda7;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.special-editions .special-features strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #d4af5a;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.special-editions .special-features ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.special-editions .special-features li {
+  margin: 2px 0;
+}
+
+/* Gold bullet points */
+.special-editions .special-features li::marker {
+  color: #c9a451;
+}
+
+/* Add-to-cart button */
+.special-editions .add-to-cart {
+  background: #c9a451;
+  color: #111;
+  border-color: #d8b96b;
+}
+
+.special-editions .add-to-cart:hover {
+  background: #e0c47b;
+}
+
+
+
   .cart-item {
     align-items: flex-start;
     flex-direction: column;
