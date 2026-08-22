@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
@@ -31,7 +32,9 @@ body::before {
   z-index: 0;
 }
 
-h1, h2, .eyebrow, .genre-card { font-family: "Cormorant Garamond", Georgia, serif; }
+h1, h2, .eyebrow, .genre-card {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
 
 .auth-page {
   display: grid;
@@ -56,6 +59,7 @@ h1, h2, .eyebrow, .genre-card { font-family: "Cormorant Garamond", Georgia, seri
   color: var(--gold);
   font-size: 19px;
 }
+
 .auth-card::before { left: 18px; }
 .auth-card::after { right: 18px; }
 
@@ -141,6 +145,7 @@ a:hover { color: #3f2e1f; }
   font-size: 13px;
   margin: 12px 0 0;
 }
+
 .message.error { color: #8a3c31; }
 .message.success { color: #41603c; }
 
@@ -217,7 +222,10 @@ a:hover { color: #3f2e1f; }
   margin: 8px 0 2px;
 }
 
-.genre-card p { margin: 0 0 25px; font: 18px "Cormorant Garamond", Georgia, serif; }
+.genre-card p {
+  margin: 0 0 25px;
+  font: 18px "Cormorant Garamond", Georgia, serif;
+}
 
 .open {
   font: 600 15px Inter, sans-serif;
@@ -296,8 +304,16 @@ a:hover { color: #3f2e1f; }
   background: rgba(251,247,239,.55);
 }
 
-.shelf-heading h2 { margin: 0 0 4px; font-size: 38px; }
-.shelf-heading p { margin: 0; color: var(--muted); line-height: 1.6; }
+.shelf-heading h2 {
+  margin: 0 0 4px;
+  font-size: 38px;
+}
+
+.shelf-heading p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
 
 .book-count {
   margin: 36px 0 16px;
@@ -340,18 +356,54 @@ a:hover { color: #3f2e1f; }
   background: rgba(231,218,197,.45);
 }
 
-.book-info { padding: 24px 20px; display: flex; flex-direction: column; justify-content: center; }
-.book-info h3 { margin: 0 0 8px; font: 600 26px/1.05 "Cormorant Garamond", Georgia, serif; }
-.book-info p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
-.book-price { margin-top: 14px; color: var(--gold); font-size: 13px; font-weight: 700; letter-spacing: .7px; }
+.book-info {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-@media (max-width: 950px) { .book-grid { grid-template-columns: repeat(2, 1fr); } }
+.book-info h3 {
+  margin: 0 0 8px;
+  font: 600 26px/1.05 "Cormorant Garamond", Georgia, serif;
+}
+
+.book-info p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.book-price {
+  margin-top: 14px;
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .7px;
+}
+
+.book-cover {
+  width: 140px !important;
+  height: 210px !important;
+  object-fit: cover;
+  object-position: center;
+  flex: 0 0 140px;
+  display: block;
+}
+
+@media (max-width: 950px) {
+  .book-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 620px) {
   .book-grid { grid-template-columns: 1fr; }
   .shelf-heading { align-items: flex-start; }
   .shelf-heading h2 { font-size: 32px; }
 }
-
 
 /* KLibrary cart additions */
 .header-actions {
@@ -373,35 +425,6 @@ a:hover { color: #3f2e1f; }
   display: grid;
   place-items: center;
   cursor: pointer;
-}
-
-.book-card {
-  min-height: 155px;
-  display: flex;
-  align-items: stretch;
-  background: rgba(251,247,239,.9);
-  border: 1px solid var(--line);
-  box-shadow: 0 9px 22px var(--shadow);
-  transition: transform .18s, box-shadow .18s;
-}
-
-.book-info {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.book-cover {
-  width: 140px !important;
-  height: 210px !important;
-  object-fit: cover;
-  object-position: center;
-  flex: 0 0 140px;
-  display: block;
 }
 
 .cart-main {
@@ -623,9 +646,4 @@ body.special-editions::before {
 
 .special-editions .add-to-cart:hover {
   background: #e0c47b;
-}
-
-.book-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
 }
