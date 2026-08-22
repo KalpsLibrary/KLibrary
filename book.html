@@ -396,7 +396,9 @@
     };
 
    const params = new URLSearchParams(window.location.search);
-const bookKey = params.get("book");
+const bookKey = (params.get("book") || "")
+  .toLowerCase()
+  .replace(/[^a-z0-9]/g, "");
 
 const book = Object.values(books).find(
   item => item.title.toLowerCase().replace(/[^a-z0-9]/g, "") === bookKey
