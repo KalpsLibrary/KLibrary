@@ -365,7 +365,7 @@
 const bookKey = params.get("book");
 
 const book = Object.values(books).find(
-  item => item.title.toLowerCase().replace(/\s+/g, "") === bookKey
+  item => item.title.toLowerCase().replace(/[^a-z0-9]/g, "") === bookKey
 );
 
     if (book) {
