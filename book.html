@@ -190,7 +190,29 @@ const book = Object.values(books).find(
       document.getElementById("add-book-to-cart").style.display = "none";
 
     }
+const addBookButton = document.getElementById("add-book-to-cart");
 
+if (addBookButton && book) {
+  addBookButton.addEventListener("click", async () => {
+    addBookButton.disabled = true;
+
+    const { error } = await db.rpc("add_to_cart", {
+      p_book_title: book.title,
+      p_price: Number(book.price.replace(/[^\d.]/g, ""))
+    });
+
+    addBookButton.disabled = false;
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    addBookButton.textContent = "✓ Added to Cart";
+
+    await refreshCartCount();
+  });
+}
   </script>
 
 </body>
