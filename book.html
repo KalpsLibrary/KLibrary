@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLibrary — Book</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="genre-page romantasy">
+
+  <header class="site-header">
+    <div>
+      <span class="eyebrow">KLIBRARY • BOOK</span>
+      <h1 id="book-title">Book</h1>
+    </div>
+
+    <div class="header-actions">
+      <a class="back" href="javascript:history.back()">← Back</a>
+      <a class="back" href="cart.html">Cart <span class="cart-count">0</span></a>
+    </div>
+  </header>
+
+  <main class="book-details-main">
+
+    <section class="book-details">
+
+      <div class="book-details-cover">
+        <img id="book-cover" src="" alt="">
+      </div>
+
+      <div class="book-details-info">
+
+        <div class="shelf-mark">❦</div>
+
+        <h2 id="book-name"></h2>
+
+        <p class="book-author" id="book-author"></p>
+
+        <div class="book-price" id="book-price"></div>
+
+        <p class="book-description" id="book-description"></p>
+
+        <button
+          class="add-to-cart"
+          id="add-book-to-cart"
+          type="button">
+          ＋ Add to Cart
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="cart.js"></script>
+
+  <script>
+
+    const books = {
+
+      "Crave": {
+        title: "Crave",
+        author: "Tracy Wolff",
+        price: "₹80 / month",
+        cover: "crave.jpg",
+        description:
+          "Grace arrives at the mysterious Katmere Academy after a family tragedy, only to discover a world of vampires, witches, and shapeshifters. As the only human, she finds herself caught between dangerous secrets and an irresistible attraction that changes everything."
+      },
+
+      "Crush": {
+        title: "Crush",
+        author: "Tracy Wolff",
+        price: "₹80 / month",
+        cover: "crush.jpg",
+        description:
+          "Back at Katmere Academy, Grace struggles with missing memories while her relationships become more complicated than ever. As powerful enemies close in, she must untangle her feelings as well as the mysteries surrounding her."
+      },
+
+      "Covet": {
+        title: "Covet",
+        author: "Tracy Wolff",
+        price: "₹80 / month",
+        cover: "covet.jpg",
+        description:
+          "With supernatural kingdoms on the brink of chaos, Grace faces impossible choices between duty, friendship, and love. A dangerous curse and growing feelings make every decision even more complicated."
+      },
+
+      "Court": {
+        title: "Court",
+        author: "Tracy Wolff",
+        price: "₹80 / month",
+        cover: "court.jpg",
+        description:
+          "As war approaches, Grace uncovers more about her own identity while navigating a romance tested by loyalty, sacrifice, and destiny. Ancient magic and rival factions make every choice count."
+      },
+
+      "Charm": {
+        title: "Charm",
+        author: "Tracy Wolff",
+        price: "₹80 / month",
+        cover: "charm.jpg",
+        description:
+          "Trapped in the Shadow Realm with Hudson Vega, Grace is forced to rely on someone she never expected to grow closer to. Together, they face dangerous challenges while an unexpected connection begins to deepen."
+      },
+
+      "Cherish": {
+        title: "Cherish",
+        author: "Tracy Wolff",
+        price: "₹80 / month",
+        cover: "cherrish.jpg",
+        description:
+          "As the supernatural world begins to unravel, Grace fights to protect the people she loves while facing new threats from the Shadow Realm. Love, loyalty, and impossible choices collide in the battle for the future."
+      },
+
+      "Shatter Me": {
+        title: "Shatter Me",
+        author: "Tahereh Mafi",
+        price: "₹80 / month",
+        cover: "shatterme.jpg",
+        description:
+          "Juliette has spent her life fearing her deadly touch, but everything changes when she forms unexpected connections in a crumbling world. Torn between freedom and powerful emotions, she must decide who she wants to become."
+      },
+
+      "Unravel Me": {
+        title: "Unravel Me",
+        author: "Tahereh Mafi",
+        price: "₹80 / month",
+        cover: "unravelme.jpg",
+        description:
+          "Juliette joins the resistance while learning to control her extraordinary abilities, but her heart becomes just as conflicted as the world around her. As trust and attraction pull her in different directions, every choice grows more difficult."
+      },
+
+      "Ignite Me": {
+        title: "Ignite Me",
+        author: "Tahereh Mafi",
+        price: "₹80 / month",
+        cover: "igniteme.jpg",
+        description:
+          "Determined to fight back against the Reestablishment, Juliette embraces her strength while relying on an unexpected ally. Passion, trust, and courage become just as important as power in the fight for the future."
+      }
+
+    };
+
+
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get("title");
+
+    const book = books[title];
+
+    if (book) {
+
+      document.title = `KLibrary — ${book.title}`;
+
+      document.getElementById("book-title").textContent = book.title;
+      document.getElementById("book-name").textContent = book.title;
+
+      document.getElementById("book-author").textContent =
+        `by ${book.author}`;
+
+      document.getElementById("book-price").textContent =
+        book.price;
+
+      document.getElementById("book-description").textContent =
+        book.description;
+
+      const cover = document.getElementById("book-cover");
+
+      cover.src = book.cover;
+      cover.alt = `${book.title} by ${book.author}`;
+
+      document.getElementById("add-book-to-cart").dataset.title =
+        book.title;
+
+    } else {
+
+      document.getElementById("book-title").textContent = "Book Not Found";
+      document.getElementById("book-name").textContent = "Book Not Found";
+      document.getElementById("book-description").textContent =
+        "Sorry, this book could not be found.";
+
+      document.getElementById("book-cover").style.display = "none";
+      document.getElementById("add-book-to-cart").style.display = "none";
+
+    }
+
+  </script>
+
+</body>
+</html>
