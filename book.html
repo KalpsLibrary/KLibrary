@@ -148,10 +148,12 @@
     };
 
 
-    const params = new URLSearchParams(window.location.search);
-    const title = params.get("title");
+   const params = new URLSearchParams(window.location.search);
+const bookKey = params.get("book");
 
-    const book = books[title];
+const book = Object.values(books).find(
+  item => item.title.toLowerCase().replace(/\s+/g, "") === bookKey
+);
 
     if (book) {
 
