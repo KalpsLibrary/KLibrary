@@ -647,3 +647,110 @@ body.special-editions::before {
 .special-editions .add-to-cart:hover {
   background: #e0c47b;
 }
+
+```css id="d8g2jd"
+/* Book details page */
+
+.book-details-main {
+  position: relative;
+  z-index: 1;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 60px 30px 90px;
+}
+
+.book-details {
+  display: flex;
+  gap: 55px;
+  align-items: center;
+  padding: 40px;
+  background: rgba(251,247,239,.92);
+  border: 1px solid var(--line);
+  box-shadow: 0 16px 40px var(--shadow);
+}
+
+.book-details-cover {
+  flex: 0 0 230px;
+  display: flex;
+  justify-content: center;
+}
+
+.book-details-cover img {
+  width: 230px;
+  height: 345px;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+  box-shadow: 0 10px 25px var(--shadow);
+}
+
+.book-details-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.book-details-info .shelf-mark {
+  font-size: 34px;
+  margin-bottom: 8px;
+}
+
+.book-details-info h2 {
+  margin: 0 0 8px;
+  font: 600 46px/1.05 "Cormorant Garamond", Georgia, serif;
+}
+
+.book-author {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font: 18px "Cormorant Garamond", Georgia, serif;
+}
+
+.book-details-info .book-price {
+  margin: 0 0 22px;
+  font-size: 16px;
+}
+
+.book-description {
+  margin: 0;
+  max-width: 620px;
+  color: var(--muted);
+  font: 18px/1.65 "Cormorant Garamond", Georgia, serif;
+}
+
+.book-details-info .add-to-cart {
+  position: static;
+  width: auto;
+  height: auto;
+  margin-top: 28px;
+  padding: 12px 22px;
+  border-radius: 0;
+  font: 600 17px "Cormorant Garamond", Georgia, serif;
+}
+
+@media (max-width: 720px) {
+  .book-details {
+    flex-direction: column;
+    padding: 28px;
+    gap: 30px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .book-details-cover {
+    flex: none;
+  }
+
+  .book-details-cover img {
+    width: 190px;
+    height: 285px;
+  }
+
+  .book-details-info h2 {
+    font-size: 38px;
+  }
+
+  .book-description {
+    max-width: none;
+  }
+}
+
