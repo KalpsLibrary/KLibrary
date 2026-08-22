@@ -18,32 +18,72 @@ async function refreshCartCount() {
 async function addBook(button) {
   const card = button.closest('.book-card');
   const title = card.querySelector('h3').textContent.trim();
-  const priceText = card.querySelector('.book-price')?.textContent || '';
-  const priceMatch = priceText.replace(/,/g, '').match(/₹\s*(\d+(?:\.\d+)?)/);
-  const price = priceMatch ? Number(priceMatch[1]) : NaN;
-
-  if (!Number.isFinite(price)) {
-    alert('This book does not have a price yet.');
-    return;
-  }
 
   button.disabled = true;
-  const { error } = await db.rpc('add_to_cart', { p_book_title: title, p_price: price });
-  button.disabled = false;
 
-  if (error) {
-    alert(error.message);
+  // Check whether this book is already in the cart
+  const { data: existing, error: checkError } = await db
+    .from('cart')
+    .select('id')
+    .eq('book_title', title)
+    .maybeSingle();
+
+  if (checkError) {
+    alert(checkError.message);
+    button.disabled = false;
     return;
   }
-  button.textContent = '✓';
+
+  // If it's already in the cart, remove it
+  if (existing) {
+    const { error } = await db.rpc('remove_from_cart', {
+      p_cart_id: existing.id
+    });
+
+    if (error) {
+      alert(error.message);
+      button.disabled = false;
+      return;
+    }
+
+    button.textContent = '+';
+  }
+
+  // Otherwise, add it
+  else {
+    const priceText = card.querySelector('.book-price')?.textContent || '';
+    const priceMatch = priceText.replace(/,/g, '').match(/₹\s*(\d+(?:\.\d+)?)/);
+    const price = priceMatch ? Number(priceMatch[1]) : NaN;
+
+    if (!Number.isFinite(price)) {
+      alert('This book does not have a price yet.');
+      button.disabled = false;
+      return;
+    }
+
+    const { error } = await db.rpc('add_to_cart', {
+      p_book_title: title,
+      p_price: price
+    });
+
+    if (error) {
+      alert(error.message);
+      button.disabled = false;
+      return;
+    }
+
+    button.textContent = '✓';
+  }
+
+  button.disabled = false;
   await refreshCartCount();
 }
-
 if (document.body.classList.contains('genre-page') || document.querySelector('#cartCount, .cart-count')) {
   getSessionOrRedirect().then(async session => {
     if (!session) return;
     document.querySelectorAll('.add-to-cart').forEach(btn => btn.addEventListener('click', () => addBook(btn)));
     await refreshCartCount();
+    await updateCartButtons();
   });
 }
 
@@ -87,6 +127,32 @@ async function loadCart() {
   totalEl.textContent = money(total);
   document.getElementById('placeOrderBtn').disabled = prices.length === 0;
   document.getElementById('twoBookNote').textContent = prices.length === 2 ? '10% two-book discount applied.' : '';
+}
+
+async function updateCartButtons() {
+  const { data: cartItems, error } = await db
+    .from('cart')
+    .select('book_title');
+
+  if (error) {
+    console.error(error.message);
+    return;
+  }
+
+  const cartTitles = new Set(cartItems.map(item => item.book_title));
+
+  document.querySelectorAll('.book-card').forEach(card => {
+    const title = card.querySelector('h3')?.textContent.trim();
+    const button = card.querySelector('.add-to-cart');
+
+    if (!title || !button) return;
+
+    if (cartTitles.has(title)) {
+      button.textContent = '✓';
+    } else {
+      button.textContent = '+';
+    }
+  });
 }
 
 function escapeHtml(s) {
