@@ -624,4 +624,8 @@ body.special-editions::before {
 .special-editions .add-to-cart:hover {
   background: #e0c47b;
 }
-```
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
