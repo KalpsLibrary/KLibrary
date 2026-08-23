@@ -647,8 +647,7 @@ body.special-editions::before {
 .special-editions .add-to-cart:hover {
   background: #e0c47b;
 }
-
-```css id="d8g2jd"
+ id="d8g2jd"
 /* Book details page */
 
 .book-details-main {
@@ -756,15 +755,32 @@ body.special-editions::before {
 .header-actions .back[href="cart.html"] {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 9px 16px;
-  border: 1px solid rgba(80, 55, 35, 0.35);
-  border-radius: 8px;
-  background: rgba(255, 248, 232, 0.7);
+  gap: 8px;
+  padding: 10px 17px;
+  border: 1px solid #b9a994;
+  border-radius: 12px;
+  background: #f8f0e3;
+  color: #765b3c;
   text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.header-actions .back[href="cart.html"] .cart-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: 50%;
+  background: #765b3c;
+  color: #fffaf2;
+  font-size: 13px;
+  line-height: 1;
 }
 
 .header-actions .back[href="cart.html"]:hover {
-  background: rgba(255, 248, 232, 1);
+  background: #efe3d2;
+  border-color: #9f8a70;
+  transform: translateY(-1px);
 }
-
