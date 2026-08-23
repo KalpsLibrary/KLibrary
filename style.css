@@ -753,4 +753,18 @@ body.special-editions::before {
     max-width: none;
   }
 }
+.header-actions .back[href="cart.html"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border: 1px solid rgba(80, 55, 35, 0.35);
+  border-radius: 8px;
+  background: rgba(255, 248, 232, 0.7);
+  text-decoration: none;
+}
+
+.header-actions .back[href="cart.html"]:hover {
+  background: rgba(255, 248, 232, 1);
+}
 
