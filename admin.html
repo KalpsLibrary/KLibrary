@@ -1,1 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLibrary — Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
+<body class="admin-page">
+
+  <header class="site-header">
+    <div>
+      <span class="eyebrow">KLIBRARY • ADMIN</span>
+      <h1>Library Management</h1>
+    </div>
+
+    <div class="header-actions">
+      <a class="back" href="genres.html">← Library</a>
+    </div>
+  </header>
+
+  <main class="admin-main">
+
+    <section class="admin-card">
+
+      <div class="shelf-mark">✦</div>
+
+      <h2>Add a New Book</h2>
+      <p class="admin-intro">
+        Add a book directly to the KLibrary catalogue.
+      </p>
+
+      <form id="bookForm">
+
+        <label for="title">Book Title</label>
+        <input
+          type="text"
+          id="title"
+          required
+          placeholder="e.g. The Silent Patient"
+        >
+
+        <label for="author">Author</label>
+        <input
+          type="text"
+          id="author"
+          required
+          placeholder="e.g. Alex Michaelides"
+        >
+
+        <label for="price">Price per month</label>
+        <input
+          type="number"
+          id="price"
+          min="0"
+          required
+          placeholder="50"
+        >
+
+        <label for="genre">Genre</label>
+        <select id="genre" required>
+          <option value="">Select a genre</option>
+          <option value="Romantasy">Romantasy</option>
+          <option value="Thrillers & Mystery">Thrillers & Mystery</option>
+          <option value="Self-help">Self-help</option>
+          <option value="Others">Others</option>
+          <option value="Special Editions">Special Editions</option>
+        </select>
+
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          rows="6"
+          required
+          placeholder="Enter the book description..."
+        ></textarea>
+
+        <label for="cover">Book Cover</label>
+        <input
+          type="file"
+          id="cover"
+          accept="image/*"
+          required
+        >
+
+        <button type="submit">
+          Add Book
+        </button>
+
+        <p id="adminMessage" class="message"></p>
+
+      </form>
+
+    </section>
+
+  </main>
+
+  <script>
+
+    const ADMIN_UID = "55df0ebb-50a3-4cd3-a674-6253c097f0c4";
+
+    async function checkAdmin() {
+
+      const {
+        data: { user }
+      } = await db.auth.getUser();
+
+      if (!user || user.id !== ADMIN_UID) {
+        document.body.innerHTML = `
+          <main style="
+            min-height:100vh;
+            display:grid;
+            place-items:center;
+            text-align:center;
+            padding:30px;
+          ">
+            <div>
+              <h1>Access Denied</h1>
+              <p>You do not have permission to access the KLibrary admin page.</p>
+              <a href="genres.html">Return to KLibrary</a>
+            </div>
+          </main>
+        `;
+        return false;
+      }
+
+      return true;
+    }
+
+
+    document.addEventListener("DOMContentLoaded", async () => {
+
+      const allowed = await checkAdmin();
+
+      if (!allowed) return;
+
+      const form = document.getElementById("bookForm");
+      const message = document.getElementById("adminMessage");
+
+      form.addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        message.textContent = "Adding book...";
+        message.className = "message";
+
+        const title = document.getElementById("title").value.trim();
+        const author = document.getElementById("author").value.trim();
+        const price = Number(document.getElementById("price").value);
+        const genre = document.getElementById("genre").value;
+        const description = document.getElementById("description").value.trim();
+        const coverFile = document.getElementById("cover").files[0];
+
+        if (!coverFile) {
+          message.textContent = "Please choose a cover image.";
+          message.className = "message error";
+          return;
+        }
+
+        try {
+
+          // Create a unique filename
+          const fileName =
+            `${Date.now()}-${coverFile.name.replace(/[^a-zA-Z0-9._-]/g, "")}`;
+
+          // Upload cover
+          const { error: uploadError } = await db.storage
+            .from("book-covers")
+            .upload(fileName, coverFile);
+
+          if (uploadError) {
+            throw uploadError;
+          }
+
+          // Get public cover URL
+          const {
+            data: { publicUrl }
+          } = db.storage
+            .from("book-covers")
+            .getPublicUrl(fileName);
+
+          // Add book to database
+          const { error: bookError } = await db
+            .from("library_books")
+            .insert({
+              title: title,
+              author: author,
+              price: price,
+              genre: genre,
+              description: description,
+              cover_url: publicUrl,
+              available: true
+            });
+
+          if (bookError) {
+            throw bookError;
+          }
+
+          message.textContent = "Book added successfully!";
+          message.className = "message success";
+
+          form.reset();
+
+        } catch (error) {
+
+          console.error(error);
+
+          message.textContent =
+            error.message || "Something went wrong.";
+
+          message.className = "message error";
+        }
+
+      });
+
+    });
+
+  </script>
+
+</body>
+</html>
