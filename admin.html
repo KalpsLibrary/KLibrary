@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,26 +9,37 @@
 </head>
 
 <body class="admin-page">
-<div id="adminLock" class="admin-lock">
-  <div class="admin-lock-card">
-    <div class="shelf-mark">🔐</div>
 
-    <span class="eyebrow">KLIBRARY • RESTRICTED</span>
-    <h1>Admin Access</h1>
-    <p>Enter the administrator password to continue.</p>
+  <!-- PASSWORD SCREEN -->
+  <div id="adminLock" class="admin-lock">
+    <div class="admin-lock-card">
 
-    <input
-      type="password"
-      id="adminPassword"
-      placeholder="Administrator password"
-      autocomplete="off"
-    >
+      <div class="shelf-mark">🔐</div>
 
-    <button type="button" id="unlockAdmin">Enter</button>
+      <span class="eyebrow">KLIBRARY • RESTRICTED</span>
 
-    <p id="lockMessage" class="message error"></p>
+      <h1>Admin Access</h1>
+
+      <p>Enter the administrator password to continue.</p>
+
+      <input
+        type="password"
+        id="adminPassword"
+        placeholder="Administrator password"
+        autocomplete="off"
+      >
+
+      <button type="button" id="unlockAdmin">
+        Enter
+      </button>
+
+      <p id="lockMessage" class="message error"></p>
+
+    </div>
   </div>
-</div>
+
+
+  <!-- HEADER -->
   <header class="site-header">
     <div>
       <span class="eyebrow">KLIBRARY • ADMIN</span>
@@ -39,12 +51,16 @@
     </div>
   </header>
 
-<main class="admin-main" id="adminContent" style="display: none;">
+
+  <!-- ADMIN CONTENT -->
+  <main class="admin-main" id="adminContent" style="display: none;">
+
     <section class="admin-card">
 
       <div class="shelf-mark">✦</div>
 
       <h2>Add a New Book</h2>
+
       <p class="admin-intro">
         Add a book directly to the KLibrary catalogue.
       </p>
@@ -52,6 +68,7 @@
       <form id="bookForm">
 
         <label for="title">Book Title</label>
+
         <input
           type="text"
           id="title"
@@ -59,7 +76,9 @@
           placeholder="e.g. The Silent Patient"
         >
 
+
         <label for="author">Author</label>
+
         <input
           type="text"
           id="author"
@@ -67,7 +86,9 @@
           placeholder="e.g. Alex Michaelides"
         >
 
+
         <label for="price">Price per month</label>
+
         <input
           type="number"
           id="price"
@@ -76,7 +97,9 @@
           placeholder="50"
         >
 
+
         <label for="genre">Genre</label>
+
         <select id="genre" required>
           <option value="">Select a genre</option>
           <option value="Romantasy">Romantasy</option>
@@ -86,7 +109,9 @@
           <option value="Special Editions">Special Editions</option>
         </select>
 
+
         <label for="description">Description</label>
+
         <textarea
           id="description"
           rows="6"
@@ -94,13 +119,16 @@
           placeholder="Enter the book description..."
         ></textarea>
 
+
         <label for="cover">Book Cover</label>
+
         <input
           type="file"
           id="cover"
           accept="image/*"
           required
         >
+
 
         <button type="submit">
           Add Book
@@ -114,9 +142,87 @@
 
   </main>
 
+
   <script>
 
-    const ADMIN_UID = "55df0ebb-50a3-4cd3-a674-6253c097f0c4";
+    /* =========================
+       ADMIN SETTINGS
+    ========================= */
+
+    const ADMIN_UID =
+      "55df0ebb-50a3-4cd3-a674-6253c097f0c4";
+
+    /*
+      CHANGE THIS to your own password.
+      Do NOT put your real password in the chat.
+    */
+    const ADMIN_PASSWORD =
+      "YOUR_ADMIN_PASSWORD";
+
+
+    /* =========================
+       PASSWORD SCREEN
+    ========================= */
+
+    const adminLock =
+      document.getElementById("adminLock");
+
+    const adminContent =
+      document.getElementById("adminContent");
+
+    const adminPassword =
+      document.getElementById("adminPassword");
+
+    const unlockAdmin =
+      document.getElementById("unlockAdmin");
+
+    const lockMessage =
+      document.getElementById("lockMessage");
+
+
+    function unlockAdminPage() {
+
+      if (adminPassword.value === ADMIN_PASSWORD) {
+
+        adminLock.style.display = "none";
+
+        adminContent.style.display = "block";
+
+      } else {
+
+        lockMessage.textContent =
+          "Incorrect password.";
+
+        adminPassword.value = "";
+
+        adminPassword.focus();
+
+      }
+
+    }
+
+
+    unlockAdmin.addEventListener(
+      "click",
+      unlockAdminPage
+    );
+
+
+    adminPassword.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "Enter") {
+          unlockAdminPage();
+        }
+
+      }
+    );
+
+
+    /* =========================
+       CHECK ADMIN ACCOUNT
+    ========================= */
 
     async function checkAdmin() {
 
@@ -124,7 +230,9 @@
         data: { user }
       } = await db.auth.getUser();
 
+
       if (!user || user.id !== ADMIN_UID) {
+
         document.body.innerHTML = `
           <main style="
             min-height:100vh;
@@ -133,108 +241,205 @@
             text-align:center;
             padding:30px;
           ">
+
             <div>
+
               <h1>Access Denied</h1>
-              <p>You do not have permission to access the KLibrary admin page.</p>
-              <a href="genres.html">Return to KLibrary</a>
+
+              <p>
+                You do not have permission
+                to access the KLibrary admin page.
+              </p>
+
+              <a href="genres.html">
+                Return to KLibrary
+              </a>
+
             </div>
+
           </main>
         `;
+
         return false;
+
       }
 
       return true;
+
     }
 
 
-    document.addEventListener("DOMContentLoaded", async () => {
+    /* =========================
+       ADD BOOK
+    ========================= */
 
-      const allowed = await checkAdmin();
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
 
-      if (!allowed) return;
+        const allowed =
+          await checkAdmin();
 
-      const form = document.getElementById("bookForm");
-      const message = document.getElementById("adminMessage");
+        if (!allowed) return;
 
-      form.addEventListener("submit", async (event) => {
 
-        event.preventDefault();
+        const form =
+          document.getElementById("bookForm");
 
-        message.textContent = "Adding book...";
-        message.className = "message";
+        const message =
+          document.getElementById("adminMessage");
 
-        const title = document.getElementById("title").value.trim();
-        const author = document.getElementById("author").value.trim();
-        const price = Number(document.getElementById("price").value);
-        const genre = document.getElementById("genre").value;
-        const description = document.getElementById("description").value.trim();
-        const coverFile = document.getElementById("cover").files[0];
 
-        if (!coverFile) {
-          message.textContent = "Please choose a cover image.";
-          message.className = "message error";
-          return;
-        }
+        form.addEventListener(
+          "submit",
+          async (event) => {
 
-        try {
+            event.preventDefault();
 
-          // Create a unique filename
-          const fileName =
-            `${Date.now()}-${coverFile.name.replace(/[^a-zA-Z0-9._-]/g, "")}`;
 
-          // Upload cover
-          const { error: uploadError } = await db.storage
-            .from("book-covers")
-            .upload(fileName, coverFile);
+            message.textContent =
+              "Adding book...";
 
-          if (uploadError) {
-            throw uploadError;
+            message.className =
+              "message";
+
+
+            const title =
+              document.getElementById("title")
+                .value.trim();
+
+            const author =
+              document.getElementById("author")
+                .value.trim();
+
+            const price =
+              Number(
+                document.getElementById("price").value
+              );
+
+            const genre =
+              document.getElementById("genre").value;
+
+            const description =
+              document.getElementById("description")
+                .value.trim();
+
+            const coverFile =
+              document.getElementById("cover")
+                .files[0];
+
+
+            if (!coverFile) {
+
+              message.textContent =
+                "Please choose a cover image.";
+
+              message.className =
+                "message error";
+
+              return;
+
+            }
+
+
+            try {
+
+              /* Upload cover */
+
+              const fileName =
+                `${Date.now()}-${coverFile.name.replace(
+                  /[^a-zA-Z0-9._-]/g,
+                  ""
+                )}`;
+
+
+              const {
+                error: uploadError
+              } = await db.storage
+                .from("book-covers")
+                .upload(
+                  fileName,
+                  coverFile
+                );
+
+
+              if (uploadError) {
+                throw uploadError;
+              }
+
+
+              /* Get public cover URL */
+
+              const {
+                data: { publicUrl }
+              } = db.storage
+                .from("book-covers")
+                .getPublicUrl(
+                  fileName
+                );
+
+
+              /* Add book to database */
+
+              const {
+                error: bookError
+              } = await db
+                .from("library_books")
+                .insert({
+
+                  title: title,
+
+                  author: author,
+
+                  price: price,
+
+                  genre: genre,
+
+                  description: description,
+
+                  cover_url: publicUrl,
+
+                  available: true
+
+                });
+
+
+              if (bookError) {
+                throw bookError;
+              }
+
+
+              message.textContent =
+                "Book added successfully!";
+
+              message.className =
+                "message success";
+
+
+              form.reset();
+
+
+            } catch (error) {
+
+              console.error(error);
+
+              message.textContent =
+                error.message ||
+                "Something went wrong.";
+
+              message.className =
+                "message error";
+
+            }
+
           }
+        );
 
-          // Get public cover URL
-          const {
-            data: { publicUrl }
-          } = db.storage
-            .from("book-covers")
-            .getPublicUrl(fileName);
-
-          // Add book to database
-          const { error: bookError } = await db
-            .from("library_books")
-            .insert({
-              title: title,
-              author: author,
-              price: price,
-              genre: genre,
-              description: description,
-              cover_url: publicUrl,
-              available: true
-            });
-
-          if (bookError) {
-            throw bookError;
-          }
-
-          message.textContent = "Book added successfully!";
-          message.className = "message success";
-
-          form.reset();
-
-        } catch (error) {
-
-          console.error(error);
-
-          message.textContent =
-            error.message || "Something went wrong.";
-
-          message.className = "message error";
-        }
-
-      });
-
-    });
+      }
+    );
 
   </script>
 
 </body>
 </html>
+```
