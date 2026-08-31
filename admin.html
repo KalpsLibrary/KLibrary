@@ -1,13 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>KLibrary — Admin</title>
+
   <link rel="stylesheet" href="style.css">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
+  <script src="supabase-config.js"></script>
 </head>
 
 <body class="admin-page">
@@ -26,6 +28,7 @@
 
 
   <!-- ADMIN CONTENT -->
+  <!-- Hidden until the correct Supabase account is verified -->
   <main class="admin-main" id="adminContent" style="display: none;">
 
     <section class="admin-card">
@@ -119,78 +122,11 @@
   <script>
 
     /* =========================
-       ADMIN SETTINGS
+       YOUR ADMIN ACCOUNT
     ========================= */
 
     const ADMIN_UID =
       "55df0ebb-50a3-4cd3-a674-6253c097f0c4";
-
-    /*
-      CHANGE THIS to your own password.
-      Do NOT put your real password in the chat.
-    */
-    const ADMIN_PASSWORD =
-      "YOUR_ADMIN_PASSWORD";
-
-
-    /* =========================
-       PASSWORD SCREEN
-    ========================= */
-
-    const adminLock =
-      document.getElementById("adminLock");
-
-    const adminContent =
-      document.getElementById("adminContent");
-
-    const adminPassword =
-      document.getElementById("adminPassword");
-
-    const unlockAdmin =
-      document.getElementById("unlockAdmin");
-
-    const lockMessage =
-      document.getElementById("lockMessage");
-
-
-    function unlockAdminPage() {
-
-      if (adminPassword.value === ADMIN_PASSWORD) {
-
-        adminLock.style.display = "none";
-
-        adminContent.style.display = "block";
-
-      } else {
-
-        lockMessage.textContent =
-          "Incorrect password.";
-
-        adminPassword.value = "";
-
-        adminPassword.focus();
-
-      }
-
-    }
-
-
-    unlockAdmin.addEventListener(
-      "click",
-      unlockAdminPage
-    );
-
-
-    adminPassword.addEventListener(
-      "keydown",
-      (event) => {
-
-        if (event.key === "Enter") {
-          unlockAdminPage();
-        }
-
-      }
-    );
 
 
     /* =========================
@@ -200,9 +136,17 @@
     async function checkAdmin() {
 
       const {
-        data: { user }
+        data: { user },
+        error
       } = await db.auth.getUser();
 
+
+      if (error) {
+        console.error(error);
+      }
+
+
+      /* Not logged in OR not your account */
 
       if (!user || user.id !== ADMIN_UID) {
 
@@ -234,11 +178,15 @@
         `;
 
         return false;
-
       }
 
-      return true;
 
+      /* Correct account */
+
+      document.getElementById("adminContent").style.display =
+        "block";
+
+      return true;
     }
 
 
@@ -250,8 +198,7 @@
       "DOMContentLoaded",
       async () => {
 
-        const allowed =
-          await checkAdmin();
+        const allowed = await checkAdmin();
 
         if (!allowed) return;
 
@@ -311,13 +258,14 @@
                 "message error";
 
               return;
-
             }
 
 
             try {
 
-              /* Upload cover */
+              /* =========================
+                 UPLOAD COVER
+              ========================= */
 
               const fileName =
                 `${Date.now()}-${coverFile.name.replace(
@@ -341,7 +289,9 @@
               }
 
 
-              /* Get public cover URL */
+              /* =========================
+                 GET COVER URL
+              ========================= */
 
               const {
                 data: { publicUrl }
@@ -352,7 +302,9 @@
                 );
 
 
-              /* Add book to database */
+              /* =========================
+                 ADD BOOK TO DATABASE
+              ========================= */
 
               const {
                 error: bookError
@@ -381,6 +333,10 @@
                 throw bookError;
               }
 
+
+              /* =========================
+                 SUCCESS
+              ========================= */
 
               message.textContent =
                 "Book added successfully!";
@@ -415,4 +371,3 @@
 
 </body>
 </html>
-
