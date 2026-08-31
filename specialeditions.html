@@ -3,72 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>KLibrary — Special Editions</title>
-
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="genre-page special-editions">
 
   <header class="site-header">
-
     <div>
       <span class="eyebrow">KLIBRARY • SHELF</span>
       <h1>Special Editions</h1>
     </div>
 
     <div class="header-actions">
-
-      <a class="back" href="genres.html">
-        ← All genres
-      </a>
-
+      <a class="back" href="genres.html">← All genres</a>
       <a class="back" href="cart.html">
         Cart <span class="cart-count">0</span>
       </a>
-
     </div>
-
   </header>
 
 
   <main class="shelf-main">
 
     <div class="shelf-heading">
-
       <div class="shelf-mark">✧</div>
 
       <div>
-
         <h2>Special Editions</h2>
-
         <p>
           Beautiful editions, collector's copies and books with something extra.
         </p>
-
       </div>
-
     </div>
 
 
-    <!-- This number will now update automatically -->
-
+    <!-- This will be updated automatically if new books are added -->
     <div class="book-count" id="bookCount">
-      LOADING TITLES...
+      4 TITLES ON THIS SHELF
     </div>
 
-
-    <!-- Books from Supabase will appear here -->
 
     <section class="book-grid" id="bookGrid">
+
+
+      <!-- =====================================================
+           EXISTING BOOK 1 — HARRY POTTER
+           ===================================================== -->
+
+      <article class="book-card">
+
+        <div class="book-spine">✧</div>
+
+        <a href="book.html?book=harrypotterandthegobletoffire">
+          <img
+            class="book-cover"
+            src="harrypotterandthegobletoffire.jpg"
+            alt="Harry Potter and the Goblet of Fire"
+          >
+        </a>
+
+        <div class="book-info">
+
+          <a href="book.html?book=harrypotterandthegobletoffire">
+            <h3>Harry Potter and the Goblet of Fire</h3>
+          </a>
+
+          <p>by J. K. Rowling</p>
+
+          <div class="book-price">
+            ₹100 / month
+          </div>
+
+          <div class="special-features">
+
+            <strong>What's special:</strong>
+
+            <ul>
+              <li>Hardcover</li>
+              <li>Illustrated</li>
+              <li>Glossy paper</li>
+              <li>Special edition</li>
+            </ul>
+
+          </div>
+
+          <button
+            class="add-to-cart"
+            type="button"
+            aria-label="Add this book to cart"
+          >＋</button>
+
+        </div>
+
+      </article>
+
+
+      <!-- =====================================================
+           EXISTING BOOK 2 — INTO THE TAYLOR-VERSE
+           ===================================================== -->
+
+      <article class="book-card">
+
+        <div class="book-spine">✧</div>
+
+        <a href="book.html?book=intothetaylorverse">
+          <img
+            class="book-cover"
+            src="intothetaylorverse.jpg"
+            alt="Into the Taylor-Verse"
+          >
+        </a>
+
+        <div class="book-info">
+
+          <a href="book.html?book=intothetaylorverse">
+            <h3>Into the Taylor-Verse</h3>
+          </a>
+
+          <p>by Satu Hameenaho-Fox</p>
+
+          <div class="book-price">
+            ₹100 / month
+          </div>
+
+          <div class="special-features">
+
+            <strong>What's special:</strong>
+
+            <ul>
+              <li>Hardcover</li>
+              <li>Illustrated</li>
+              <li>Glossy paper</li>
+            </ul>
+
+          </div>
+
+          <button
+            class="add-to-cart"
+            type="button"
+            aria-label="Add this book to cart"
+          >＋</button>
+
+        </div>
+
+      </article>
+
+
+      <!-- =====================================================
+           EXISTING BOOK 3 — BECOMING SUPERNATURAL
+           ===================================================== -->
+
+      <article class="book-card">
+
+        <div class="book-spine">✧</div>
+
+        <a href="book.html?book=becomingsupernatural">
+          <img
+            class="book-cover"
+            src="becomingsupernatural.jpg"
+            alt="Becoming Supernatural"
+          >
+        </a>
+
+        <div class="book-info">
+
+          <a href="book.html?book=becomingsupernatural">
+            <h3>Becoming Supernatural</h3>
+          </a>
+
+          <p>by Dr. Joe Dispenza</p>
+
+          <div class="book-price">
+            ₹100 / month
+          </div>
+
+          <div class="special-features">
+
+            <strong>What's special:</strong>
+
+            <ul>
+              <li>Hardcover</li>
+              <li>Sprayed edges</li>
+              <li>With images</li>
+              <li>Free bookmark</li>
+            </ul>
+
+          </div>
+
+          <button
+            class="add-to-cart"
+            type="button"
+            aria-label="Add this book to cart"
+          >＋</button>
+
+        </div>
+
+      </article>
+
+
+      <!-- =====================================================
+           EXISTING BOOK 4 — HEALER
+           ===================================================== -->
+
+      <article class="book-card">
+
+        <div class="book-spine">✧</div>
+
+        <a href="book.html?book=healer">
+          <img
+            class="book-cover"
+            src="healer.jpg"
+            alt="Healer"
+          >
+        </a>
+
+        <div class="book-info">
+
+          <a href="book.html?book=healer">
+            <h3>Healer</h3>
+          </a>
+
+          <p>by Dr. Pranay Gupte</p>
+
+          <div class="book-price">
+            ₹100 / month
+          </div>
+
+          <div class="special-features">
+
+            <strong>What's special:</strong>
+
+            <ul>
+              <li>Hardcover</li>
+              <li>Limited book</li>
+            </ul>
+
+          </div>
+
+          <button
+            class="add-to-cart"
+            type="button"
+            aria-label="Add this book to cart"
+          >＋</button>
+
+        </div>
+
+      </article>
+
+
+      <!-- =====================================================
+           NEW ADMIN BOOKS WILL BE ADDED HERE AUTOMATICALLY
+           ===================================================== -->
+
+      <div id="dynamicBooks"></div>
 
     </section>
 
   </main>
 
 
-  <!-- SUPABASE -->
+  <!-- =========================================================
+       SCRIPTS
+       ========================================================= -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -81,14 +278,63 @@
 
   <script>
 
-    /* =========================
-       LOAD SPECIAL EDITIONS
-    ========================= */
+    /* =========================================================
+       EXISTING BOOKS
 
-    async function loadSpecialEditions() {
+       These are already written in HTML, so we don't want
+       Supabase to create duplicates of them.
+       ========================================================= */
 
-      const bookGrid =
-        document.getElementById("bookGrid");
+    const existingBooks = [
+      "Harry Potter and the Goblet of Fire",
+      "Into the Taylor-Verse",
+      "Becoming Supernatural",
+      "Healer"
+    ];
+
+
+    /* =========================================================
+       MAKE A URL-FRIENDLY BOOK NAME
+       ========================================================= */
+
+    function makeBookSlug(title) {
+
+      return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "")
+        .trim();
+
+    }
+
+
+    /* =========================================================
+       PROTECT HTML
+       ========================================================= */
+
+    function escapeHtml(value) {
+
+      return String(value).replace(
+        /[&<>'"]/g,
+        character => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#39;",
+          '"': "&quot;"
+        })[character]
+      );
+
+    }
+
+
+    /* =========================================================
+       LOAD NEW SPECIAL EDITIONS FROM SUPABASE
+       ========================================================= */
+
+    async function loadAdminBooks() {
+
+      const dynamicBooks =
+        document.getElementById("dynamicBooks");
 
       const bookCount =
         document.getElementById("bookCount");
@@ -115,75 +361,50 @@
 
       if (error) {
 
-        console.error(error);
-
-        bookCount.textContent =
-          "UNABLE TO LOAD TITLES";
-
-        bookGrid.innerHTML = `
-          <div class="empty-shelf">
-
-            <h2>Something went wrong</h2>
-
-            <p>
-              ${escapeHtml(error.message)}
-            </p>
-
-          </div>
-        `;
+        console.error(
+          "Could not load Special Editions:",
+          error
+        );
 
         return;
 
       }
 
 
-      /* =========================
-         NO BOOKS
-      ========================= */
-
-      if (!books || books.length === 0) {
-
-        bookCount.textContent =
-          "NO TITLES ON THIS SHELF";
-
-        bookGrid.innerHTML = `
-          <div class="empty-shelf">
-
-            <h2>The shelf is empty</h2>
-
-            <p>
-              No Special Editions are currently available.
-            </p>
-
-          </div>
-        `;
-
-        return;
-
-      }
+      if (!books) return;
 
 
-      /* =========================
-         UPDATE COUNT
-      ========================= */
+      /* =====================================================
+         REMOVE BOOKS THAT ALREADY EXIST IN THE HTML
 
-      bookCount.textContent =
-        `${books.length} TITLES ON THIS SHELF`;
+         This prevents your four existing books from appearing
+         twice if you eventually put them into Supabase.
+         ===================================================== */
+
+      const newBooks = books.filter(book => {
+
+        return !existingBooks.some(existingTitle =>
+          existingTitle.toLowerCase() ===
+          book.title.toLowerCase()
+        );
+
+      });
 
 
-      /* =========================
-         CREATE BOOK CARDS
-      ========================= */
+      /* =====================================================
+         ADD NEW BOOKS
+         ===================================================== */
 
-      bookGrid.innerHTML = "";
-
-
-      books.forEach(book => {
+      newBooks.forEach(book => {
 
         const card =
           document.createElement("article");
 
         card.className = "book-card";
+
+
+        const slug =
+          makeBookSlug(book.title);
 
 
         card.innerHTML = `
@@ -193,7 +414,7 @@
           </div>
 
 
-          <a href="book.html?book=${encodeURIComponent(book.title)}">
+          <a href="book.html?book=${encodeURIComponent(slug)}">
 
             <img
               class="book-cover"
@@ -206,7 +427,7 @@
 
           <div class="book-info">
 
-            <a href="book.html?book=${encodeURIComponent(book.title)}">
+            <a href="book.html?book=${encodeURIComponent(slug)}">
 
               <h3>
                 ${escapeHtml(book.title)}
@@ -255,86 +476,74 @@
         `;
 
 
-        bookGrid.appendChild(card);
+        dynamicBooks.appendChild(card);
 
       });
 
 
-      /* =========================
-         CONNECT CART BUTTONS
-      ========================= */
+      /* =====================================================
+         UPDATE BOOK COUNT
+
+         4 existing books + new Supabase books
+         ===================================================== */
+
+      bookCount.textContent =
+        `${4 + newBooks.length} TITLES ON THIS SHELF`;
+
+
+      /* =====================================================
+         CONNECT ADD-TO-CART BUTTONS
+
+         This also connects the newly-created buttons.
+         ===================================================== */
 
       document
         .querySelectorAll(".add-to-cart")
         .forEach(button => {
 
+          if (button.dataset.cartConnected) {
+            return;
+          }
+
+          button.dataset.cartConnected = "true";
+
           button.addEventListener(
             "click",
-            () => addBook(button)
+            () => {
+
+              if (typeof addBook === "function") {
+
+                addBook(button);
+
+              } else {
+
+                console.error(
+                  "addBook() was not found in cart.js"
+                );
+
+              }
+
+            }
           );
 
         });
 
-
-      /* Update buttons based on cart */
-
-      await updateCartButtons();
-
     }
 
 
-    /* =========================
-       ESCAPE HTML
-    ========================= */
-
-    function escapeHtml(value) {
-
-      return String(value).replace(
-        /[&<>'"]/g,
-
-        character => ({
-
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          "'": "&#39;",
-          '"': "&quot;"
-
-        })[character]
-
-      );
-
-    }
-
-
-    /* =========================
+    /* =========================================================
        START
-    ========================= */
+       ========================================================= */
 
     document.addEventListener(
       "DOMContentLoaded",
       async () => {
 
-        const {
-          data: {
-            session
-          }
-        } = await db.auth.getSession();
+        await loadAdminBooks();
 
-
-        if (!session) {
-
-          window.location.href =
-            "index.html";
-
-          return;
-
+        if (typeof refreshCartCount === "function") {
+          await refreshCartCount();
         }
-
-
-        await loadSpecialEditions();
-
-        await refreshCartCount();
 
       }
     );
