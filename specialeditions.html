@@ -443,25 +443,7 @@
             <div class="book-price">
               ₹${Number(book.price).toFixed(0)} / month
             </div>
-
-
-            ${
-              book.description
-                ? `
-                  <div class="special-features">
-
-                    <strong>About this edition:</strong>
-
-                    <p>
-                      ${escapeHtml(book.description)}
-                    </p>
-
-                  </div>
-                `
-                : ""
-            }
-
-
+            
             <button
               class="add-to-cart"
               type="button"
