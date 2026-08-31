@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,9 +17,12 @@
 
     <div class="header-actions">
       <a class="back" href="javascript:history.back()">← Back</a>
-      <a class="back" href="cart.html">Cart <span class="cart-count">0</span></a>
+      <a class="back" href="cart.html">
+        Cart <span class="cart-count">0</span>
+      </a>
     </div>
   </header>
+
 
   <main class="book-details-main">
 
@@ -55,12 +57,19 @@
 
   </main>
 
+
+  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
   <script src="cart.js"></script>
 
+
   <script>
+
+    /* =========================================================
+       EXISTING KLIBRARY BOOKS
+       ========================================================= */
 
     const books = {
 
@@ -144,395 +153,667 @@
         description:
           "Determined to fight back against the Reestablishment, Juliette embraces her strength while relying on an unexpected ally. Passion, trust, and courage become just as important as power in the fight for the future."
       },
+
       "The Sandman": {
-  title: "The Sandman",
-  author: "Lars Kepler",
-  price: "₹50 / month",
-  cover: "thesandman.jpg",
-  description:
-    "A chilling crime thriller in which a young man who vanished thirteen years ago suddenly reappears. Detectives Joona Linna and Saga Bauer must uncover what happened to him and his missing sister by confronting a dangerous killer from the past."
-},
+        title: "The Sandman",
+        author: "Lars Kepler",
+        price: "₹50 / month",
+        cover: "thesandman.jpg",
+        description:
+          "A chilling crime thriller in which a young man who vanished thirteen years ago suddenly reappears. Detectives Joona Linna and Saga Bauer must uncover what happened to him and his missing sister by confronting a dangerous killer from the past."
+      },
 
-"The Silent Patient": {
-  title: "The Silent Patient",
-  author: "Alex Michaelides",
-  price: "₹50 / month",
-  cover: "thesilentpatient.jpg",
-  description:
-    "Alicia Berenson is a successful painter whose life changes forever after her husband is killed and she suddenly stops speaking. Criminal psychotherapist Theo Faber becomes determined to uncover her story and the mystery behind her silence."
-},
+      "The Silent Patient": {
+        title: "The Silent Patient",
+        author: "Alex Michaelides",
+        price: "₹50 / month",
+        cover: "thesilentpatient.jpg",
+        description:
+          "Alicia Berenson is a successful painter whose life changes forever after her husband is killed and she suddenly stops speaking. Criminal psychotherapist Theo Faber becomes determined to uncover her story and the mystery behind her silence."
+      },
 
-"The Naturals": {
-  title: "The Naturals",
-  author: "Jennifer Lynn Barnes",
-  price: "₹50 / month",
-  cover: "thenaturals.jpg",
-  description:
-    "Seventeen-year-old Cassie Hobbes has an extraordinary talent for reading people, which brings her into a secret FBI program for gifted teenagers who solve cold cases. When a new killer appears, Cassie and the other Naturals find themselves dangerously close to the investigation."
-},
+      "The Naturals": {
+        title: "The Naturals",
+        author: "Jennifer Lynn Barnes",
+        price: "₹50 / month",
+        cover: "thenaturals.jpg",
+        description:
+          "Seventeen-year-old Cassie Hobbes has an extraordinary talent for reading people, which brings her into a secret FBI program for gifted teenagers who solve cold cases. When a new killer appears, Cassie and the other Naturals find themselves dangerously close to the investigation."
+      },
 
-"One of Us Is Lying": {
-  title: "One of Us Is Lying",
-  author: "Karen M. McManus",
-  price: "₹50 / month",
-  cover: "oneofusislying.jpg",
-  description:
-    "Five students enter detention at Bayview High, but only four leave alive. With secrets, suspicion, and a murder investigation surrounding them, four classmates must figure out who is responsible—and whether the truth is more complicated than it seems."
-},
+      "One of Us Is Lying": {
+        title: "One of Us Is Lying",
+        author: "Karen M. McManus",
+        price: "₹50 / month",
+        cover: "oneofusislying.jpg",
+        description:
+          "Five students enter detention at Bayview High, but only four leave alive. With secrets, suspicion, and a murder investigation surrounding them, four classmates must figure out who is responsible—and whether the truth is more complicated than it seems."
+      },
 
-"One of Us Is Next": {
-  title: "One of Us Is Next",
-  author: "Karen M. McManus",
-  price: "₹50 / month",
-  cover: "oneofusisnext.jpg",
-  description:
-    "A new mystery emerges at Bayview High when someone starts a dangerous game of Truth or Dare. As secrets are exposed and the dares become increasingly threatening, a new group of students must figure out who is behind the game."
-},
+      "One of Us Is Next": {
+        title: "One of Us Is Next",
+        author: "Karen M. McManus",
+        price: "₹50 / month",
+        cover: "oneofusisnext.jpg",
+        description:
+          "A new mystery emerges at Bayview High when someone starts a dangerous game of Truth or Dare. As secrets are exposed and the dares become increasingly threatening, a new group of students must figure out who is behind the game."
+      },
 
-"The Crash": {
-  title: "The Crash",
-  author: "Freida McFadden",
-  price: "₹50 / month",
-  cover: "thecrash.jpg",
-  description:
-    "After a woman becomes stranded in the middle of a brutal winter storm, a chance encounter leads her into an increasingly dangerous situation. What begins as a desperate attempt to survive soon becomes a tense psychological thriller filled with uncertainty and danger."
-},
+      "The Crash": {
+        title: "The Crash",
+        author: "Freida McFadden",
+        price: "₹50 / month",
+        cover: "thecrash.jpg",
+        description:
+          "After a woman becomes stranded in the middle of a brutal winter storm, a chance encounter leads her into an increasingly dangerous situation. What begins as a desperate attempt to survive soon becomes a tense psychological thriller filled with uncertainty and danger."
+      },
 
-"The Intruder": {
-  title: "The Intruder",
-  author: "Freida McFadden",
-  price: "₹50 / month",
-  cover: "theintruder.jpg",
-  description:
-    "A woman believes she has found a safe place to start over, but an unsettling presence threatens the sense of security she has built. As strange events begin to unfold, she is forced to question who she can trust and what is really happening around her."
-},
+      "The Intruder": {
+        title: "The Intruder",
+        author: "Freida McFadden",
+        price: "₹50 / month",
+        cover: "theintruder.jpg",
+        description:
+          "A woman believes she has found a safe place to start over, but an unsettling presence threatens the sense of security she has built. As strange events begin to unfold, she is forced to question who she can trust and what is really happening around her."
+      },
 
-"Never Lie": {
-  title: "Never Lie",
-  author: "Freida McFadden",
-  price: "₹50 / month",
-  cover: "neverlie.jpg",
-  description:
-    "Newlyweds searching for their dream home become trapped by a snowstorm at an isolated estate. Inside, they discover recordings connected to the house's former owner, sending them into a disturbing mystery where nothing is quite what it seems."
-},
+      "Never Lie": {
+        title: "Never Lie",
+        author: "Freida McFadden",
+        price: "₹50 / month",
+        cover: "neverlie.jpg",
+        description:
+          "Newlyweds searching for their dream home become trapped by a snowstorm at an isolated estate. Inside, they discover recordings connected to the house's former owner, sending them into a disturbing mystery where nothing is quite what it seems."
+      },
 
-"Ward D": {
-  title: "Ward D",
-  author: "Freida McFadden",
-  price: "₹50 / month",
-  cover: "wardd.jpg",
-  description:
-    "Amy is forced to spend a terrifying night inside Ward D, a locked psychiatric unit where the patients and staff are surrounded by secrets. As the night unfolds, she realizes that staying safe may be far more difficult than she expected."
-},
-"A Children's History of India": {
-  title: "A Children's History of India",
-  author: "Subhadra Sen Gupta",
-  price: "₹50 / month",
-  cover: "achildrenshistoryofindia.jpg",
-  description:
-    "A lively journey through India's past, taking young readers from the ancient cities of Harappa through the Mughal era, the freedom struggle, and the years after Independence. With illustrations and activities, it makes Indian history engaging and approachable."
-},
+      "Ward D": {
+        title: "Ward D",
+        author: "Freida McFadden",
+        price: "₹50 / month",
+        cover: "wardd.jpg",
+        description:
+          "Amy is forced to spend a terrifying night inside Ward D, a locked psychiatric unit where the patients and staff are surrounded by secrets. As the night unfolds, she realizes that staying safe may be far more difficult than she expected."
+      },
 
-"Think and Grow Rich": {
-  title: "Think and Grow Rich",
-  author: "Napoleon Hill",
-  price: "₹50 / month",
-  cover: "thinkandgrowrich.jpg",
-  description:
-    "A classic guide to personal success that explores the mindset, habits, and principles that can help people pursue their goals. Napoleon Hill presents ideas about ambition, persistence, decision-making, and turning goals into action."
-},
+      "A Children's History of India": {
+        title: "A Children's History of India",
+        author: "Subhadra Sen Gupta",
+        price: "₹50 / month",
+        cover: "achildrenshistoryofindia.jpg",
+        description:
+          "A lively journey through India's past, taking young readers from the ancient cities of Harappa through the Mughal era, the freedom struggle, and the years after Independence. With illustrations and activities, it makes Indian history engaging and approachable."
+      },
 
-"Good Vibes, Good Life": {
-  title: "Good Vibes, Good Life",
-  author: "Vex King",
-  price: "₹50 / month",
-  cover: "goodvibesgoodlife.jpg",
-  description:
-    "A practical and uplifting guide focused on self-love, positive thinking, mindfulness, and personal growth. Vex King offers advice for building healthier habits, managing negative emotions, and creating a more meaningful life."
-},
+      "Think and Grow Rich": {
+        title: "Think and Grow Rich",
+        author: "Napoleon Hill",
+        price: "₹50 / month",
+        cover: "thinkandgrowrich.jpg",
+        description:
+          "A classic guide to personal success that explores the mindset, habits, and principles that can help people pursue their goals. Napoleon Hill presents ideas about ambition, persistence, decision-making, and turning goals into action."
+      },
 
-"Mrs Funnybones": {
-  title: "Mrs Funnybones",
-  author: "Twinkle Khanna",
-  price: "₹50 / month",
-  cover: "mrsfunnybones.jpg",
-  description:
-    "A witty collection of observations about everyday life, family, work, and modern Indian society. Twinkle Khanna turns familiar experiences into humorous and sharply relatable stories."
-},
+      "Good Vibes, Good Life": {
+        title: "Good Vibes, Good Life",
+        author: "Vex King",
+        price: "₹50 / month",
+        cover: "goodvibesgoodlife.jpg",
+        description:
+          "A practical and uplifting guide focused on self-love, positive thinking, mindfulness, and personal growth. Vex King offers advice for building healthier habits, managing negative emotions, and creating a more meaningful life."
+      },
 
-"Life's Amazing Secrets": {
-  title: "Life's Amazing Secrets",
-  author: "Gaur Gopal Das",
-  price: "₹50 / month",
-  cover: "lifesamazingsecrets.jpg",
-  description:
-    "A thoughtful guide to finding greater balance, purpose, and happiness in everyday life. Through conversations and practical insights, Gaur Gopal Das explores relationships, personal growth, work, and discovering what makes life meaningful."
-},
+      "Mrs Funnybones": {
+        title: "Mrs Funnybones",
+        author: "Twinkle Khanna",
+        price: "₹50 / month",
+        cover: "mrsfunnybones.jpg",
+        description:
+          "A witty collection of observations about everyday life, family, work, and modern Indian society. Twinkle Khanna turns familiar experiences into humorous and sharply relatable stories."
+      },
 
-"IKIGAI": {
-  title: "IKIGAI",
-  author: "Hector Garcia and Francesc Miralles",
-  price: "₹60 / month",
-  cover: "ikigai.jpg",
-  description:
-    "An exploration of the Japanese concept of ikigai, or a reason for being, and how it can help people find purpose and satisfaction in everyday life. The book connects meaning, habits, happiness, and a balanced approach to living."
-},
+      "Life's Amazing Secrets": {
+        title: "Life's Amazing Secrets",
+        author: "Gaur Gopal Das",
+        price: "₹50 / month",
+        cover: "lifesamazingsecrets.jpg",
+        description:
+          "A thoughtful guide to finding greater balance, purpose, and happiness in everyday life. Through conversations and practical insights, Gaur Gopal Das explores relationships, personal growth, work, and discovering what makes life meaningful."
+      },
 
-"The IKIGAI Journey": {
-  title: "The IKIGAI Journey",
-  author: "Hector Garcia and Francesc Miralles",
-  price: "₹60 / month",
-  cover: "theikigaijourney.jpg",
-  description:
-    "A practical follow-up to IKIGAI that helps readers explore their own sense of purpose through exercises, habits, and new ways of thinking. It focuses on bringing passion, values, work, and meaning together in everyday life."
-},
+      "IKIGAI": {
+        title: "IKIGAI",
+        author: "Hector Garcia and Francesc Miralles",
+        price: "₹60 / month",
+        cover: "ikigai.jpg",
+        description:
+          "An exploration of the Japanese concept of ikigai, or a reason for being, and how it can help people find purpose and satisfaction in everyday life. The book connects meaning, habits, happiness, and a balanced approach to living."
+      },
 
-"Flow": {
-  title: "Flow",
-  author: "Mihaly Csikszentmihalyi",
-  price: "₹50 / month",
-  cover: "flow.jpg",
-  description:
-    "An exploration of the state of complete absorption known as flow, when people become deeply focused on a challenging and rewarding activity. The book examines how attention, creativity, motivation, and meaningful challenges can contribute to a fulfilling life."
-},
+      "The IKIGAI Journey": {
+        title: "The IKIGAI Journey",
+        author: "Hector Garcia and Francesc Miralles",
+        price: "₹60 / month",
+        cover: "theikigaijourney.jpg",
+        description:
+          "A practical follow-up to IKIGAI that helps readers explore their own sense of purpose through exercises, habits, and new ways of thinking. It focuses on bringing passion, values, work, and meaning together in everyday life."
+      },
 
-"How to Talk to Anyone": {
-  title: "How to Talk to Anyone",
-  author: "Leil Lowndes",
-  price: "₹50 / month",
-  cover: "howtotalktoanyone.jpg",
-  description:
-    "A practical guide to becoming more confident and effective in social situations. Leil Lowndes shares techniques for starting conversations, making connections, improving body language, and communicating more comfortably with others."
-},
+      "Flow": {
+        title: "Flow",
+        author: "Mihaly Csikszentmihalyi",
+        price: "₹50 / month",
+        cover: "flow.jpg",
+        description:
+          "An exploration of the state of complete absorption known as flow, when people become deeply focused on a challenging and rewarding activity. The book examines how attention, creativity, motivation, and meaningful challenges can contribute to a fulfilling life."
+      },
 
-"The Test of My Life": {
-  title: "The Test of My Life",
-  author: "Yuvraj Singh",
-  price: "₹60 / month",
-  cover: "thetestofmylife.jpg",
-  description:
-    "Yuvraj Singh's personal account of his cricket career, his battle with cancer, and his determination to return to the sport he loved. It is a story of resilience, adversity, and finding the strength to keep moving forward."
-},
+      "How to Talk to Anyone": {
+        title: "How to Talk to Anyone",
+        author: "Leil Lowndes",
+        price: "₹50 / month",
+        cover: "howtotalktoanyone.jpg",
+        description:
+          "A practical guide to becoming more confident and effective in social situations. Leil Lowndes shares techniques for starting conversations, making connections, improving body language, and communicating more comfortably with others."
+      },
 
-"The Monk Who Sold His Ferrari": {
-  title: "The Monk Who Sold His Ferrari",
-  author: "Robin Sharma",
-  price: "₹50 / month",
-  cover: "themonkwhosoldhisferrari.jpg",
-  description:
-    "A motivational fable about a successful lawyer who rethinks his priorities and searches for a more meaningful way to live. Through his journey, the book explores purpose, discipline, happiness, and personal transformation."
-},
+      "The Test of My Life": {
+        title: "The Test of My Life",
+        author: "Yuvraj Singh",
+        price: "₹60 / month",
+        cover: "thetestofmylife.jpg",
+        description:
+          "Yuvraj Singh's personal account of his cricket career, his battle with cancer, and his determination to return to the sport he loved. It is a story of resilience, adversity, and finding the strength to keep moving forward."
+      },
 
-"Unlocking Potential": {
-  title: "Unlocking Potential",
-  author: "Michael K. Simpson",
-  price: "₹50 / month",
-  cover: "unlockingpotential.jpg",
-  description:
-    "A leadership and coaching guide focused on helping people and teams reach their potential. It explores skills such as building trust, giving effective feedback, developing talent, and helping others gain clarity and confidence."
-},
+      "The Monk Who Sold His Ferrari": {
+        title: "The Monk Who Sold His Ferrari",
+        author: "Robin Sharma",
+        price: "₹50 / month",
+        cover: "themonkwhosoldhisferrari.jpg",
+        description:
+          "A motivational fable about a successful lawyer who rethinks his priorities and searches for a more meaningful way to live. Through his journey, the book explores purpose, discipline, happiness, and personal transformation."
+      },
 
-"The Secret": {
-  title: "The Secret",
-  author: "Rhonda Byrne",
-  price: "₹60 / month",
-  cover: "thesecret.jpg",
-  description:
-    "A motivational book centered on the idea that thoughts and beliefs can influence the way people approach their lives and goals. It presents ideas about positive thinking, visualization, gratitude, and pursuing the life you want."
-},
+      "Unlocking Potential": {
+        title: "Unlocking Potential",
+        author: "Michael K. Simpson",
+        price: "₹50 / month",
+        cover: "unlockingpotential.jpg",
+        description:
+          "A leadership and coaching guide focused on helping people and teams reach their potential. It explores skills such as building trust, giving effective feedback, developing talent, and helping others gain clarity and confidence."
+      },
 
-"Life": {
-  title: "Life",
-  author: "Kartar Singh",
-  price: "₹50 / month",
-  cover: "life.jpg",
-  description:
-    "A reflective book about self-awareness, inner energy, and finding greater peace and happiness. Kartar Singh explores how understanding oneself and one's connection with universal consciousness can lead toward a more fulfilling life."
-},
+      "The Secret": {
+        title: "The Secret",
+        author: "Rhonda Byrne",
+        price: "₹60 / month",
+        cover: "thesecret.jpg",
+        description:
+          "A motivational book centered on the idea that thoughts and beliefs can influence the way people approach their lives and goals. It presents ideas about positive thinking, visualization, gratitude, and pursuing the life you want."
+      },
 
-"The Story of Anne Frank": {
-  title: "The Story of Anne Frank",
-  author: "Emma Clarkson Berne",
-  price: "₹30 / month",
-  cover: "thestoryofannefrank.jpg",
-  description:
-    "An accessible introduction to Anne Frank's life and the historical events surrounding her. Written for younger readers, it presents her story in a clear and engaging way while helping readers understand the history behind it."
-},
-"Harry Potter and the Goblet of Fire": {
-  title: "Harry Potter and the Goblet of Fire",
-  author: "J. K. Rowling",
-  price: "₹100 / month",
-  cover: "harrypotterandthegobletoffire.jpg",
-  description:
-    "Harry returns to Hogwarts for a year filled with magical competition, new challenges, and unexpected dangers. As the Triwizard Tournament brings students together from across the wizarding world, Harry finds himself drawn into an adventure unlike anything he has faced before."
-},
+      "Life": {
+        title: "Life",
+        author: "Kartar Singh",
+        price: "₹50 / month",
+        cover: "life.jpg",
+        description:
+          "A reflective book about self-awareness, inner energy, and finding greater peace and happiness. Kartar Singh explores how understanding oneself and one's connection with universal consciousness can lead toward a more fulfilling life."
+      },
 
-"Into the Taylor-Verse": {
-  title: "Into the Taylor-Verse",
-  author: "Satu Hameenaho-Fox",
-  price: "₹100 / month",
-  cover: "intothetaylorverse.jpg",
-  description:
-    "A celebration of Taylor Swift's music, career, and cultural impact, exploring the stories, themes, and eras behind her remarkable journey. Filled with facts and illustrations, it offers fans a fun way to explore the Taylor-Verse."
-},
+      "The Story of Anne Frank": {
+        title: "The Story of Anne Frank",
+        author: "Emma Clarkson Berne",
+        price: "₹30 / month",
+        cover: "thestoryofannefrank.jpg",
+        description:
+          "An accessible introduction to Anne Frank's life and the historical events surrounding her. Written for younger readers, it presents her story in a clear and engaging way while helping readers understand the history behind it."
+      },
 
-"Becoming Supernatural": {
-  title: "Becoming Supernatural",
-  author: "Dr. Joe Dispenza",
-  price: "₹100 / month",
-  cover: "becomingsupernatural.jpg",
-  description:
-    "A guide to exploring the relationship between thoughts, emotions, the body, and personal transformation. Dr. Joe Dispenza combines meditation practices, scientific ideas, and personal development concepts to encourage readers to think beyond their usual patterns."
-},
+      "Harry Potter and the Goblet of Fire": {
+        title: "Harry Potter and the Goblet of Fire",
+        author: "J. K. Rowling",
+        price: "₹100 / month",
+        cover: "harrypotterandthegobletoffire.jpg",
+        description:
+          "Harry returns to Hogwarts for a year filled with magical competition, new challenges, and unexpected dangers. As the Triwizard Tournament brings students together from across the wizarding world, Harry finds himself drawn into an adventure unlike anything he has faced before."
+      },
 
-"Healer": {
-  title: "Healer",
-  author: "Dr. Pranay Gupte",
-  price: "₹100 / month",
-  cover: "healer.jpg",
-  description:
-    "A portrait of Dr. Prathap Chandra Reddy and the development of modern healthcare in India. The book follows his journey as a physician and healthcare pioneer while exploring the changing landscape of medicine and healthcare in the country."
-},      
+      "Into the Taylor-Verse": {
+        title: "Into the Taylor-Verse",
+        author: "Satu Hameenaho-Fox",
+        price: "₹100 / month",
+        cover: "intothetaylorverse.jpg",
+        description:
+          "A celebration of Taylor Swift's music, career, and cultural impact, exploring the stories, themes, and eras behind her remarkable journey. Filled with facts and illustrations, it offers fans a fun way to explore the Taylor-Verse."
+      },
+
+      "Becoming Supernatural": {
+        title: "Becoming Supernatural",
+        author: "Dr. Joe Dispenza",
+        price: "₹100 / month",
+        cover: "becomingsupernatural.jpg",
+        description:
+          "A guide to exploring the relationship between thoughts, emotions, the body, and personal transformation. Dr. Joe Dispenza combines meditation practices, scientific ideas, and personal development concepts to encourage readers to think beyond their usual patterns."
+      },
+
+      "Healer": {
+        title: "Healer",
+        author: "Dr. Pranay Gupte",
+        price: "₹100 / month",
+        cover: "healer.jpg",
+        description:
+          "A portrait of Dr. Prathap Chandra Reddy and the development of modern healthcare in India. The book follows his journey as a physician and healthcare pioneer while exploring the changing landscape of medicine and healthcare in the country."
+      },
+
       "12-Week Fitness Project": {
-  title: "12-Week Fitness Project",
-  author: "Rujuta Diwekar",
-  price: "₹50 / month",
-  cover: "12weekfitnessproject.jpg",
-  description:
-    "A practical 12-week guide to building healthier habits through balanced nutrition, regular movement, and sustainable lifestyle changes. Rujuta Diwekar focuses on simple, realistic approaches to health and fitness that can be incorporated into everyday life."
-},
+        title: "12-Week Fitness Project",
+        author: "Rujuta Diwekar",
+        price: "₹50 / month",
+        cover: "12weekfitnessproject.jpg",
+        description:
+          "A practical 12-week guide to building healthier habits through balanced nutrition, regular movement, and sustainable lifestyle changes. Rujuta Diwekar focuses on simple, realistic approaches to health and fitness that can be incorporated into everyday life."
+      },
 
-"Your Personal Health Coach": {
-  title: "Your Personal Health Coach",
-  author: "Luke Coutinho",
-  price: "₹50 / month",
-  cover: "yourpersonalhealthcoach.jpg",
-  description:
-    "A guide to understanding everyday health through nutrition, lifestyle choices, exercise, sleep, and overall wellbeing. Luke Coutinho encourages readers to develop healthier habits and take a more holistic approach to caring for their bodies."
-},
+      "Your Personal Health Coach": {
+        title: "Your Personal Health Coach",
+        author: "Luke Coutinho",
+        price: "₹50 / month",
+        cover: "yourpersonalhealthcoach.jpg",
+        description:
+          "A guide to understanding everyday health through nutrition, lifestyle choices, exercise, sleep, and overall wellbeing. Luke Coutinho encourages readers to develop healthier habits and take a more holistic approach to caring for their bodies."
+      },
 
-"The Heart of Jainism": {
-  title: "The Heart of Jainism",
-  author: "Daaji Kamlesh D. Patel",
-  price: "₹50 / month",
-  cover: "theheartofjainism.jpg",
-  description:
-    "An exploration of Jain philosophy and its teachings on compassion, non-violence, self-discipline, and spiritual awareness. The book introduces readers to ideas that can inspire a more thoughtful and peaceful way of living."
-},
+      "The Heart of Jainism": {
+        title: "The Heart of Jainism",
+        author: "Daaji Kamlesh D. Patel",
+        price: "₹50 / month",
+        cover: "theheartofjainism.jpg",
+        description:
+          "An exploration of Jain philosophy and its teachings on compassion, non-violence, self-discipline, and spiritual awareness. The book introduces readers to ideas that can inspire a more thoughtful and peaceful way of living."
+      },
 
-"Mahagatha": {
-  title: "Mahagatha",
-  author: "Satyarth Nayak",
-  price: "₹50 / month",
-  cover: "mahagatha.jpg",
-  description:
-    "A sweeping retelling of stories from Indian mythology, bringing together gods, kings, heroes, sages, and legendary events from India's rich mythological tradition. The book explores the fascinating characters and stories that have shaped Indian culture."
-},
+      "Mahagatha": {
+        title: "Mahagatha",
+        author: "Satyarth Nayak",
+        price: "₹50 / month",
+        cover: "mahagatha.jpg",
+        description:
+          "A sweeping retelling of stories from Indian mythology, bringing together gods, kings, heroes, sages, and legendary events from India's rich mythological tradition. The book explores the fascinating characters and stories that have shaped Indian culture."
+      },
 
-"Basics of Bhagavad Gita": {
-  title: "Basics of Bhagavad Gita",
-  author: "Unknown",
-  price: "₹50 / month",
-  cover: "basicsofbhagavadgita.jpg",
-  description:
-    "An accessible introduction to the teachings and ideas of the Bhagavad Gita. It explores concepts such as duty, action, wisdom, devotion, and the search for inner peace in a simple and approachable way."
-},
+      "Basics of Bhagavad Gita": {
+        title: "Basics of Bhagavad Gita",
+        author: "Unknown",
+        price: "₹50 / month",
+        cover: "basicsofbhagavadgita.jpg",
+        description:
+          "An accessible introduction to the teachings and ideas of the Bhagavad Gita. It explores concepts such as duty, action, wisdom, devotion, and the search for inner peace in a simple and approachable way."
+      },
 
-"Nutriblend (Recipe Book)": {
-  title: "Nutriblend (Recipe Book)",
-  author: "Unknown",
-  price: "₹50 / month",
-  cover: "nutriblend.jpg",
-  description:
-    "A collection of recipes focused on nutritious and wholesome meals. The book offers ideas for preparing balanced dishes and incorporating a variety of healthy ingredients into everyday cooking."
-},
+      "Nutriblend (Recipe Book)": {
+        title: "Nutriblend (Recipe Book)",
+        author: "Unknown",
+        price: "₹50 / month",
+        cover: "nutriblend.jpg",
+        description:
+          "A collection of recipes focused on nutritious and wholesome meals. The book offers ideas for preparing balanced dishes and incorporating a variety of healthy ingredients into everyday cooking."
+      },
 
-"The Day I Stopped Drinking Milk": {
-  title: "The Day I Stopped Drinking Milk",
-  author: "Sudha Murty",
-  price: "₹50 / month",
-  cover: "thedayistoppeddrinkingmilk.jpg",
-  description:
-    "A collection of warm and engaging stories by Sudha Murty that draw on everyday experiences and human relationships. Through simple storytelling, the book explores kindness, family, values, and the unexpected lessons found in ordinary moments."
-},
+      "The Day I Stopped Drinking Milk": {
+        title: "The Day I Stopped Drinking Milk",
+        author: "Sudha Murty",
+        price: "₹50 / month",
+        cover: "thedayistoppeddrinkingmilk.jpg",
+        description:
+          "A collection of warm and engaging stories by Sudha Murty that draw on everyday experiences and human relationships. Through simple storytelling, the book explores kindness, family, values, and the unexpected lessons found in ordinary moments."
+      },
 
-"12 Years": {
-  title: "12 Years",
-  author: "Chetan Bhagat",
-  price: "₹50 / month",
-  cover: "12years.jpg",
-  description:
-    "A story that explores relationships, ambition, personal choices, and the changes that can unfold over the course of twelve years. The book follows its characters through different stages of life as they navigate their hopes, challenges, and decisions."
-},
+      "12 Years": {
+        title: "12 Years",
+        author: "Chetan Bhagat",
+        price: "₹50 / month",
+        cover: "12years.jpg",
+        description:
+          "A story that explores relationships, ambition, personal choices, and the changes that can unfold over the course of twelve years. The book follows its characters through different stages of life as they navigate their hopes, challenges, and decisions."
+      }
+
     };
 
-   const params = new URLSearchParams(window.location.search);
-const bookKey = (params.get("book") || "")
-  .toLowerCase()
-  .replace(/[^a-z0-9]/g, "");
 
-const book = Object.values(books).find(
-  item => item.title.toLowerCase().replace(/[^a-z0-9]/g, "") === bookKey
-);
+    /* =========================================================
+       NORMALIZE TITLE
+       ========================================================= */
 
-    if (book) {
+    function normalizeTitle(title) {
+      return String(title || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+    }
 
-      document.title = `KLibrary — ${book.title}`;
 
-      document.getElementById("book-title").textContent = book.title;
-      document.getElementById("book-name").textContent = book.title;
+    /* =========================================================
+       DISPLAY BOOK
+       ========================================================= */
 
-      document.getElementById("book-author").textContent =
-        `by ${book.author}`;
+    function displayBook(book) {
 
-      document.getElementById("book-price").textContent =
-        book.price;
+      if (!book) {
 
-      document.getElementById("book-description").textContent =
-        book.description;
+        document.getElementById("book-title").textContent =
+          "Book Not Found";
 
-      const cover = document.getElementById("book-cover");
+        document.getElementById("book-name").textContent =
+          "Book Not Found";
 
-      cover.src = book.cover;
-      cover.alt = `${book.title} by ${book.author}`;
+        document.getElementById("book-author").textContent =
+          "";
 
-      document.getElementById("add-book-to-cart").dataset.title =
+        document.getElementById("book-price").textContent =
+          "";
+
+        document.getElementById("book-description").textContent =
+          "Sorry, this book could not be found.";
+
+        document.getElementById("book-cover").style.display =
+          "none";
+
+        document.getElementById("add-book-to-cart").style.display =
+          "none";
+
+        return;
+      }
+
+
+      /* TITLE */
+
+      document.title =
+        `KLibrary — ${book.title}`;
+
+      document.getElementById("book-title").textContent =
         book.title;
 
-    } else {
+      document.getElementById("book-name").textContent =
+        book.title;
 
-      document.getElementById("book-title").textContent = "Book Not Found";
-      document.getElementById("book-name").textContent = "Book Not Found";
+
+      /* AUTHOR */
+
+      document.getElementById("book-author").textContent =
+        `by ${book.author || "Unknown author"}`;
+
+
+      /* PRICE */
+
+      const numericPrice =
+        Number(
+          String(book.price)
+            .replace(/[^\d.]/g, "")
+        );
+
+      document.getElementById("book-price").textContent =
+        `₹${numericPrice} / month`;
+
+
+      /* DESCRIPTION */
+
       document.getElementById("book-description").textContent =
-        "Sorry, this book could not be found.";
+        book.description ||
+        "No description available.";
 
-      document.getElementById("book-cover").style.display = "none";
-      document.getElementById("add-book-to-cart").style.display = "none";
+
+      /* COVER */
+
+      const cover =
+        document.getElementById("book-cover");
+
+      cover.src =
+        book.cover_url ||
+        book.cover ||
+        "";
+
+      cover.alt =
+        `${book.title} by ${book.author || "Unknown author"}`;
+
+      cover.style.display =
+        "block";
+
+
+      /* CART BUTTON */
+
+      const addBookButton =
+        document.getElementById("add-book-to-cart");
+
+      addBookButton.style.display =
+        "inline-block";
+
+      addBookButton.disabled =
+        false;
+
+      addBookButton.textContent =
+        "＋ Add to Cart";
+
+      addBookButton.dataset.title =
+        book.title;
+
+
+      /* =======================================================
+         ADD TO CART
+         ======================================================= */
+
+      addBookButton.onclick =
+        async () => {
+
+          addBookButton.disabled =
+            true;
+
+          const { error } =
+            await db.rpc(
+              "add_to_cart",
+              {
+                p_book_title:
+                  book.title,
+
+                p_price:
+                  numericPrice
+              }
+            );
+
+          addBookButton.disabled =
+            false;
+
+
+          if (error) {
+
+            console.error(
+              "Cart error:",
+              error
+            );
+
+            alert(
+              error.message
+            );
+
+            return;
+          }
+
+
+          addBookButton.textContent =
+            "✓ Added to Cart";
+
+
+          if (
+            typeof refreshCartCount ===
+            "function"
+          ) {
+
+            await refreshCartCount();
+
+          }
+
+        };
 
     }
-const addBookButton = document.getElementById("add-book-to-cart");
 
-if (addBookButton && book) {
-  addBookButton.addEventListener("click", async () => {
-    addBookButton.disabled = true;
 
-    const { error } = await db.rpc("add_to_cart", {
-      p_book_title: book.title,
-      p_price: Number(book.price.replace(/[^\d.]/g, ""))
-    });
+    /* =========================================================
+       LOAD BOOK
+       ========================================================= */
 
-    addBookButton.disabled = false;
+    async function loadBook() {
 
-    if (error) {
-      alert(error.message);
-      return;
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      const bookKey =
+        normalizeTitle(
+          params.get("book")
+        );
+
+
+      console.log(
+        "Looking for book:",
+        bookKey
+      );
+
+
+      if (!bookKey) {
+
+        displayBook(null);
+
+        return;
+      }
+
+
+      /* =======================================================
+         FIRST: CHECK SUPABASE
+         
+         This is what allows Admin-added books to work.
+      ======================================================= */
+
+      const {
+        data: supabaseBooks,
+        error: supabaseError
+      } = await db
+        .from("library_books")
+        .select(`
+          title,
+          author,
+          price,
+          description,
+          cover_url,
+          available
+        `)
+        .eq("available", true);
+
+
+      if (supabaseError) {
+
+        console.error(
+          "Supabase book loading error:",
+          supabaseError
+        );
+
+      }
+
+
+      if (
+        !supabaseError &&
+        supabaseBooks
+      ) {
+
+        const supabaseBook =
+          supabaseBooks.find(
+            item =>
+              normalizeTitle(item.title) ===
+              bookKey
+          );
+
+
+        if (supabaseBook) {
+
+          console.log(
+            "Loaded book from Supabase:",
+            supabaseBook.title
+          );
+
+          displayBook(
+            supabaseBook
+          );
+
+          return;
+        }
+
+      }
+
+
+      /* =======================================================
+         SECOND: CHECK EXISTING BOOK LIST
+         
+         This keeps all your original books working.
+      ======================================================= */
+
+      const oldBook =
+        Object.values(books).find(
+          item =>
+            normalizeTitle(item.title) ===
+            bookKey
+        );
+
+
+      if (oldBook) {
+
+        console.log(
+          "Loaded existing book:",
+          oldBook.title
+        );
+
+        displayBook(
+          oldBook
+        );
+
+        return;
+      }
+
+
+      /* =======================================================
+         NOTHING FOUND
+      ======================================================= */
+
+      console.error(
+        "Book not found:",
+        bookKey
+      );
+
+      displayBook(null);
+
     }
 
-    addBookButton.textContent = "✓ Added to Cart";
 
-    await refreshCartCount();
-  });
-}
+    /* =========================================================
+       START
+       ========================================================= */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
+
+        await loadBook();
+
+        if (
+          typeof refreshCartCount ===
+          "function"
+        ) {
+
+          await refreshCartCount();
+
+        }
+
+      }
+    );
+
   </script>
 
 </body>
