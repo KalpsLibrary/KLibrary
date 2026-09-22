@@ -660,138 +660,171 @@
        LOAD BOOK
        ========================================================= */
 
-    async function loadBook() {
+   async function loadBook() {
 
-      const params =
-        new URLSearchParams(
-          window.location.search
-        );
+  const params =
+    new URLSearchParams(window.location.search);
 
-      const bookKey =
-        normalizeTitle(
-          params.get("book")
-        );
+  const bookKey =
+    normalizeTitle(
+      params.get("book")
+    );
 
+  console.log(
+    "Looking for book:",
+    bookKey
+  );
+
+  if (!bookKey) {
+    displayBook(null);
+    return;
+  }
+
+
+  /* =======================================================
+     FIRST: CHECK EXISTING KLIBRARY BOOKS
+     
+     This preserves all your original descriptions,
+     covers and prices.
+  ======================================================= */
+
+  const oldBook =
+    Object.values(books).find(
+      item =>
+        normalizeTitle(item.title) ===
+        bookKey
+    );
+
+
+  /* =======================================================
+     SECOND: CHECK SUPABASE
+     
+     This allows Admin-added books to work.
+  ======================================================= */
+
+  const {
+    data: supabaseBooks,
+    error: supabaseError
+  } = await db
+    .from("library_books")
+    .select(`
+      title,
+      author,
+      price,
+      description,
+      cover_url,
+      available
+    `)
+    .eq("available", true);
+
+
+  if (supabaseError) {
+
+    console.error(
+      "Supabase book loading error:",
+      supabaseError
+    );
+
+  }
+
+
+  if (
+    !supabaseError &&
+    supabaseBooks
+  ) {
+
+    const supabaseBook =
+      supabaseBooks.find(
+        item =>
+          normalizeTitle(item.title) ===
+          bookKey
+      );
+
+
+    if (supabaseBook) {
 
       console.log(
-        "Looking for book:",
-        bookKey
+        "Loaded book from Supabase:",
+        supabaseBook.title
       );
 
 
-      if (!bookKey) {
+      /*
+        If this book already exists in the
+        original KLibrary list, preserve its
+        original description if Supabase
+        doesn't have one.
+      */
 
-        displayBook(null);
+      const finalBook = {
 
-        return;
-      }
+        ...supabaseBook,
 
+        description:
+          supabaseBook.description ||
+          oldBook?.description ||
+          "No description available.",
 
-      /* =======================================================
-         FIRST: CHECK SUPABASE
-         
-         This is what allows Admin-added books to work.
-      ======================================================= */
+        cover_url:
+          supabaseBook.cover_url ||
+          oldBook?.cover ||
+          "",
 
-      const {
-        data: supabaseBooks,
-        error: supabaseError
-      } = await db
-        .from("library_books")
-        .select(`
-          title,
-          author,
-          price,
-          description,
-          cover_url,
-          available
-        `)
-        .eq("available", true);
+        author:
+          supabaseBook.author ||
+          oldBook?.author ||
+          "Unknown author",
 
+        price:
+          supabaseBook.price ||
+          oldBook?.price ||
+          "₹50 / month"
 
-      if (supabaseError) {
-
-        console.error(
-          "Supabase book loading error:",
-          supabaseError
-        );
-
-      }
+      };
 
 
-      if (
-        !supabaseError &&
-        supabaseBooks
-      ) {
+      displayBook(finalBook);
 
-        const supabaseBook =
-          supabaseBooks.find(
-            item =>
-              normalizeTitle(item.title) ===
-              bookKey
-          );
-
-
-        if (supabaseBook) {
-
-          console.log(
-            "Loaded book from Supabase:",
-            supabaseBook.title
-          );
-
-          displayBook(
-            supabaseBook
-          );
-
-          return;
-        }
-
-      }
-
-
-      /* =======================================================
-         SECOND: CHECK EXISTING BOOK LIST
-         
-         This keeps all your original books working.
-      ======================================================= */
-
-      const oldBook =
-        Object.values(books).find(
-          item =>
-            normalizeTitle(item.title) ===
-            bookKey
-        );
-
-
-      if (oldBook) {
-
-        console.log(
-          "Loaded existing book:",
-          oldBook.title
-        );
-
-        displayBook(
-          oldBook
-        );
-
-        return;
-      }
-
-
-      /* =======================================================
-         NOTHING FOUND
-      ======================================================= */
-
-      console.error(
-        "Book not found:",
-        bookKey
-      );
-
-      displayBook(null);
+      return;
 
     }
 
+  }
 
+
+  /* =======================================================
+     THIRD: USE ORIGINAL BOOK
+     
+     If it wasn't found in Supabase, use the
+     original hard-coded KLibrary book.
+  ======================================================= */
+
+  if (oldBook) {
+
+    console.log(
+      "Loaded existing book:",
+      oldBook.title
+    );
+
+    displayBook(oldBook);
+
+    return;
+
+  }
+
+
+  /* =======================================================
+     NOTHING FOUND
+  ======================================================= */
+
+  console.error(
+    "Book not found:",
+    bookKey
+  );
+
+  displayBook(null);
+
+}
     /* =========================================================
        START
        ========================================================= */
