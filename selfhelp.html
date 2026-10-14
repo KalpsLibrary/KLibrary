@@ -243,11 +243,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       .map(heading => normalizeTitle(heading.textContent))
   );
 
-  function normalizeTitle(title) {
-    return String(title || "")
-      .toLowerCase()
-      .replace(/[^\p{L}\p{N}]/gu, "");
-  }
+ function normalizeTitle(title) {
+  return String(title || "")
+    .normalize("NFC")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
+}
 
   function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>"']/g, char => ({
