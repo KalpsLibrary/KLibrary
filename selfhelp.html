@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KLibrary — Self-Help</title>
+  <title>KLibrary — Self-help</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="genre-page self-help">
+<body class="genre-page Self-help">
   <header class="site-header">
     <div>
       <span class="eyebrow">KLIBRARY • SHELF</span>
-      <h1>Self-Help</h1>
+      <h1>Self-help</h1>
     </div>
     <div class="header-actions">
       <a class="back" href="genres.html">← All genres</a>
@@ -240,7 +240,7 @@
       const count = document.getElementById("book-count");
 
       if (!grid || !count || typeof db === "undefined") {
-        console.error("Self-Help shelf could not initialise. Check supabase-config.js.");
+        console.error("Self-help shelf could not initialise. Check supabase-config.js.");
         return;
       }
 
@@ -345,7 +345,7 @@ console.log("ALL AVAILABLE BOOKS:", selfHelpBooks.map(book => ({
         count.textContent =
           `${total} TITLE${total === 1 ? "" : "S"} ON THIS SHELF`;
       } catch (error) {
-        console.error("Could not load Self-Help books from Supabase:", error);
+        console.error("Could not load Self-help books from Supabase:", error);
       }
 
       if (typeof refreshCartCount === "function") {
