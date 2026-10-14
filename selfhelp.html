@@ -319,6 +319,11 @@
         if (error) throw error;
 
         console.log("Self-Help books found:", selfHelpBooks.length);
+console.log("Returned books:", selfHelpBooks.map(book => ({
+  title: book.title,
+  genre: book.genre,
+  available: book.available
+})));
 
         selfHelpBooks.forEach(book => {
           const key = normalise(book.title);
