@@ -318,8 +318,15 @@
 
         if (error) throw error;
 
-        console.log("Self-Help books found:", selfHelpBooks.length);
-console.log("Returned books:", selfHelpBooks.map(book => ({
+       const { data: selfHelpBooks, error } = await db
+  .from("library_books")
+  .select("title, author, price, cover_url, available, genre")
+  .eq("available", true)
+  .order("title", { ascending: true });
+
+if (error) throw error;
+
+console.log("ALL AVAILABLE BOOKS:", selfHelpBooks.map(book => ({
   title: book.title,
   genre: book.genre,
   available: book.available
