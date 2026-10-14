@@ -266,119 +266,118 @@
   <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
   <script src="cart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const grid = document.getElementById("book-grid");
+    const count = document.getElementById("book-count");
 
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const grid = document.getElementById("book-grid");
-      const count = document.getElementById("book-count");
+    if (!grid || !count || typeof db === "undefined") {
+      console.error("Self-Help shelf could not initialise. Check supabase-config.js.");
+      return;
+    }
 
-      if (!grid || !count || typeof db === "undefined") {
-        console.error("Self-Help shelf could not initialise.");
-        return;
+    function normalise(value) {
+      return String(value || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+    }
+
+    const existingTitles = new Set(
+      Array.from(grid.querySelectorAll(".book-info h3"))
+        .map(heading => normalise(heading.textContent))
+    );
+
+    function makeBookCard(book) {
+      const title = book.title || "Untitled";
+      const author = book.author || "Unknown";
+      const price = Number(book.price);
+      const key = normalise(title);
+
+      const article = document.createElement("article");
+      article.className = "book-card";
+
+      const spine = document.createElement("div");
+      spine.className = "book-spine";
+      spine.textContent = "✦";
+
+      const coverLink = document.createElement("a");
+      coverLink.href = `book.html?book=${encodeURIComponent(key)}`;
+
+      if (book.cover_url) {
+        const image = document.createElement("img");
+        image.className = "book-cover";
+        image.src = book.cover_url;
+        image.alt = title;
+        coverLink.appendChild(image);
       }
 
-      // Record the titles already hard-coded on this shelf.
-      const existingTitles = new Set(
-        Array.from(grid.querySelectorAll(".book-info h3"))
-          .map(heading => normaliseTitle(heading.textContent))
-      );
+      const info = document.createElement("div");
+      info.className = "book-info";
 
-      function normaliseTitle(title) {
-        return String(title || "")
-          .toLowerCase()
-          .replace(/[^a-z0-9]/g, "");
-      }
+      const titleLink = document.createElement("a");
+      titleLink.href = `book.html?book=${encodeURIComponent(key)}`;
 
-      function makeBookCard(book) {
-        const title = book.title || "Untitled";
-        const author = book.author || "Unknown";
-        const price = Number(book.price);
-        const bookKey = normaliseTitle(title);
+      const heading = document.createElement("h3");
+      heading.textContent = title;
+      titleLink.appendChild(heading);
 
-        const article = document.createElement("article");
-        article.className = "book-card";
+      const priceElement = document.createElement("div");
+      priceElement.className = "book-price";
+      priceElement.textContent =
+        `₹${Number.isFinite(price) ? price : 0} / month`;
 
-        const spine = document.createElement("div");
-        spine.className = "book-spine";
-        spine.textContent = "✦";
+      const authorElement = document.createElement("p");
+      authorElement.textContent = `by ${author}`;
 
-        const coverLink = document.createElement("a");
-        coverLink.href = `book.html?book=${encodeURIComponent(bookKey)}`;
+      const button = document.createElement("button");
+      button.className = "add-to-cart";
+      button.type = "button";
+      button.setAttribute("aria-label", "Add this book to cart");
+      button.textContent = "＋";
 
-        if (book.cover_url) {
-          const image = document.createElement("img");
-          image.className = "book-cover";
-          image.src = book.cover_url;
-          image.alt = title;
-          coverLink.appendChild(image);
-        }
+      info.append(titleLink, priceElement, authorElement, button);
+      article.append(spine, coverLink, info);
 
-        const info = document.createElement("div");
-        info.className = "book-info";
+      return article;
+    }
 
-        const titleLink = document.createElement("a");
-        titleLink.href = `book.html?book=${encodeURIComponent(bookKey)}`;
+    try {
+      const { data, error } = await db
+        .from("library_books")
+        .select("title, author, price, cover_url, available, genre")
+        .eq("available", true)
+        .order("title", { ascending: true });
 
-        const heading = document.createElement("h3");
-        heading.textContent = title;
-        titleLink.appendChild(heading);
+      if (error) throw error;
 
-        const priceElement = document.createElement("div");
-        priceElement.className = "book-price";
-        priceElement.textContent =
-          `₹${Number.isFinite(price) ? price : 0} / month`;
+      const selfHelpBooks = (data || []).filter(book => {
+        const genre = normalise(book.genre);
+        return genre === "selfhelp";
+      });
 
-        const authorElement = document.createElement("p");
-        authorElement.textContent = `by ${author}`;
+      console.log("Self-Help books found:", selfHelpBooks.length);
 
-        const cartButton = document.createElement("button");
-        cartButton.className = "add-to-cart";
-        cartButton.type = "button";
-        cartButton.setAttribute("aria-label", "Add this book to cart");
-        cartButton.textContent = "＋";
+      selfHelpBooks.forEach(book => {
+        const key = normalise(book.title);
 
-        info.append(titleLink, priceElement, authorElement, cartButton);
-        article.append(spine, coverLink, info);
+        if (!key || existingTitles.has(key)) return;
 
-        return article;
-      }
+        grid.appendChild(makeBookCard(book));
+        existingTitles.add(key);
+      });
 
-      try {
-        const { data, error } = await db
-          .from("library_books")
-          .select("title, author, price, cover_url, available, genre")
-          .eq("genre", "Self-Help")
-          .eq("available", true)
-          .order("title", { ascending: true });
+      const total = grid.querySelectorAll(".book-card").length;
+      count.textContent =
+        `${total} TITLE${total === 1 ? "" : "S"} ON THIS SHELF`;
 
-        if (error) {
-          throw error;
-        }
+    } catch (error) {
+      console.error("Could not load Self-Help books from Supabase:", error);
+    }
 
-        (data || []).forEach(book => {
-          const key = normaliseTitle(book.title);
-
-          // Do not add a second copy of a hard-coded book.
-          if (!key || existingTitles.has(key)) {
-            return;
-          }
-
-          grid.appendChild(makeBookCard(book));
-          existingTitles.add(key);
-        });
-
-        const total = grid.querySelectorAll(".book-card").length;
-        count.textContent =
-          `${total} TITLE${total === 1 ? "" : "S"} ON THIS SHELF`;
-
-      } catch (error) {
-        console.error("Could not load Self-Help books from Supabase:", error);
-      }
-
-      if (typeof refreshCartCount === "function") {
-        await refreshCartCount();
-      }
-    });
-  </script>
+    if (typeof refreshCartCount === "function") {
+      await refreshCartCount();
+    }
+  });
+</script>
 </body>
 </html>
