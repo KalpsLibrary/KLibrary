@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function normalizeTitle(title) {
     return String(title || "")
       .toLowerCase()
-      .replace(/[^a-z0-9]/g, "");
+      .replace(/[^\p{L}\p{N}]/gu, "");
   }
 
   function escapeHtml(value) {
