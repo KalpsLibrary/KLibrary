@@ -485,12 +485,12 @@
        NORMALIZE TITLE
        ========================================================= */
 
-    function normalizeTitle(title) {
-      return String(title || "")
-        .toLowerCase()
-        .replace(/[^\p{L}\p{N}]/gu, "");
-    }
-
+   function normalizeTitle(title) {
+  return String(title || "")
+    .normalize("NFC")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
+}
 
     /* =========================================================
        DISPLAY BOOK
