@@ -715,7 +715,15 @@
       cover_url,
       available
     `)
-    .eq("available", true);
+    .from("library_books")
+    .select(`
+      title,
+      author,
+      price,
+      description,
+      cover_url,
+      available
+    `);
 
 
   if (supabaseError) {
