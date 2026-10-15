@@ -157,7 +157,7 @@
     const count = document.getElementById("book-count");
 
     // Use the existing Supabase client.
-    const db = window.db || window.supabaseClient;
+    const db = window.db;
 
     if (!db || !grid || !count) {
       console.error("Romantasy: Supabase client or shelf elements not found.");
