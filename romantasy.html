@@ -151,30 +151,40 @@
   <script src="auth.js"></script>
   <script src="cart.js"></script>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const grid = document.getElementById("book-grid");
-    const count = document.getElementById("book-count");
+ 
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const grid = document.getElementById("book-grid");
+  const count = document.getElementById("book-count");
 
-    // Use the existing Supabase client.
-    const db = window.db;
+  if (!grid || !count) {
+    console.error("Romantasy shelf elements not found.");
+    return;
+  }
 
-    if (!db || !grid || !count) {
-      console.error("Romantasy: Supabase client or shelf elements not found.");
-      return;
-    }
+  function normalizeTitle(title) {
+    return String(title || "")
+      .normalize("NFC")
+      .toLowerCase()
+      .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
+  }
 
-    const normalizeTitle = title =>
-      String(title || "")
-        .normalize("NFC")
-        .toLowerCase()
-        .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+  }
 
-    const existingTitles = new Set(
-      [...grid.querySelectorAll(".book-info h3")]
-        .map(heading => normalizeTitle(heading.textContent))
-    );
+  const existingTitles = new Set(
+    Array.from(grid.querySelectorAll(".book-info h3"))
+      .map(heading => normalizeTitle(heading.textContent))
+  );
 
+  try {
     const { data, error } = await db
       .from("library_books")
       .select("title, author, price, cover_url, available, genre")
@@ -182,65 +192,55 @@
       .eq("available", true)
       .order("title", { ascending: true });
 
-    if (error) {
-      console.error("Could not load Romantasy books:", error);
-      return;
-    }
+    if (error) throw error;
 
-    for (const book of data || []) {
-      const key = normalizeTitle(book.title);
+    (data || []).forEach(book => {
+      const titleKey = normalizeTitle(book.title);
 
-      if (!key || existingTitles.has(key)) continue;
-      existingTitles.add(key);
+      if (!book.title || existingTitles.has(titleKey)) return;
 
-      const detailURL = "book.html?title=" + encodeURIComponent(book.title);
+      const title = escapeHtml(book.title);
+      const author = escapeHtml(book.author || "Unknown author");
+      const cover = escapeHtml(book.cover_url || "");
+      const priceNumber = Number(
+        String(book.price ?? "").replace(/[^\d.]/g, "")
+      );
+      const price = Number.isFinite(priceNumber) ? priceNumber : 80;
+      const bookUrl = "book.html?title=" + encodeURIComponent(book.title);
+
       const card = document.createElement("article");
       card.className = "book-card";
 
-      const coverLink = document.createElement("a");
-      coverLink.href = detailURL;
+      card.innerHTML = `
+        <a href="${bookUrl}">
+          ${cover
+            ? `<img class="book-cover" src="${cover}" alt="${title} by ${author}">`
+            : ""}
+        </a>
+        <div class="book-info">
+          <a href="${bookUrl}"><h3>${title}</h3></a>
+          <p>by ${author}</p>
+          <div class="book-price">₹${price} / month</div>
+          <button class="add-to-cart" type="button"
+            aria-label="Add ${title} to cart">＋</button>
+        </div>
+      `;
 
-      if (book.cover_url) {
-        const cover = document.createElement("img");
-        cover.className = "book-cover";
-        cover.src = book.cover_url;
-        cover.alt = book.title;
-        cover.loading = "lazy";
-        coverLink.appendChild(cover);
-      }
-
-      const info = document.createElement("div");
-      info.className = "book-info";
-
-      const titleLink = document.createElement("a");
-      titleLink.href = detailURL;
-
-      const heading = document.createElement("h3");
-      heading.textContent = book.title;
-      titleLink.appendChild(heading);
-
-      const author = document.createElement("p");
-      author.textContent = "by " + (book.author || "Unknown author");
-
-      const price = document.createElement("div");
-      price.className = "book-price";
-      price.textContent = "₹" + (book.price ?? 0) + " / month";
-
-      const button = document.createElement("button");
-      button.className = "add-to-cart";
-      button.type = "button";
-      button.setAttribute("aria-label", "Add this book to cart");
-      button.textContent = "＋";
-
-      info.append(titleLink, author, price, button);
-      card.append(coverLink, info);
       grid.appendChild(card);
-    }
+      existingTitles.add(titleKey);
+    });
 
     count.textContent =
       `${grid.querySelectorAll(".book-card").length} TITLES ON THIS SHELF`;
-  });
-  </script>
 
+  } catch (error) {
+    console.error("Could not load Romantasy books from Supabase:", error);
+  }
+
+  if (typeof refreshCartCount === "function") {
+    await refreshCartCount();
+  }
+});
+</script>
 </body>
 </html>
