@@ -30,7 +30,6 @@
     <div class="book-count" id="book-count">9 TITLES ON THIS SHELF</div>
 
     <section class="book-grid" id="book-grid">
-
       <article class="book-card">
         <div class="book-spine">⌕</div>
         <a href="book.html?book=thesandman">
@@ -147,7 +146,6 @@
           <button class="add-to-cart" type="button" aria-label="Add The Crash to cart">＋</button>
         </div>
       </article>
-
     </section>
   </main>
 
@@ -161,11 +159,10 @@
       const grid = document.getElementById("book-grid");
       const count = document.getElementById("book-count");
 
-      // Record the original books so they aren't added twice.
-      const existingTitles = new Set(
-        Array.from(grid.querySelectorAll(".book-info h3"))
-          .map(heading => normalizeTitle(heading.textContent))
-      );
+      // cart.js already handles the original buttons.
+      grid.querySelectorAll(".add-to-cart").forEach(button => {
+        button.dataset.cartConnected = "true";
+      });
 
       function normalizeTitle(title) {
         return String(title || "")
@@ -193,6 +190,11 @@
 
         if (error) throw error;
 
+        const existingTitles = new Set(
+          Array.from(grid.querySelectorAll(".book-info h3"))
+            .map(heading => normalizeTitle(heading.textContent))
+        );
+
         (data || []).forEach(book => {
           const titleKey = normalizeTitle(book.title);
 
@@ -201,7 +203,9 @@
           const title = escapeHtml(book.title);
           const author = escapeHtml(book.author || "Unknown author");
           const cover = escapeHtml(book.cover_url || "");
-          const priceNumber = Number(String(book.price ?? "").replace(/[^\d.]/g, ""));
+          const priceNumber = Number(
+            String(book.price ?? "").replace(/[^\d.]/g, "")
+          );
           const price = Number.isFinite(priceNumber) ? priceNumber : 50;
           const bookUrl = "book.html?book=" + encodeURIComponent(titleKey);
 
@@ -211,7 +215,9 @@
           card.innerHTML = `
             <div class="book-spine">⌕</div>
             <a href="${bookUrl}">
-              <img class="book-cover" src="${cover}" alt="${title} by ${author}">
+              ${cover
+                ? `<img class="book-cover" src="${cover}" alt="${title} by ${author}">`
+                : ""}
             </a>
             <div class="book-info">
               <a href="${bookUrl}"><h3>${title}</h3></a>
@@ -226,32 +232,34 @@
           existingTitles.add(titleKey);
         });
 
-        const total = grid.querySelectorAll(".book-card").length;
-        count.textContent = `${total} TITLES ON THIS SHELF`;
+        count.textContent =
+          `${grid.querySelectorAll(".book-card").length} TITLES ON THIS SHELF`;
 
-// Connect Add to Cart buttons, including newly loaded Supabase books.
-document.querySelectorAll(".add-to-cart").forEach(button => {
-  if (button.dataset.cartConnected) {
-    return;
-  }
-
-  button.dataset.cartConnected = "true";
-
-  button.addEventListener("click", () => {
-    if (typeof addBook === "function") {
-      addBook(button);
-    } else {
-      console.error("addBook() was not found in cart.js");
-    }
-  });
-});
-        
       } catch (error) {
         console.error("Could not load thriller books from Supabase:", error);
       }
 
+      // Connect newly added Supabase buttons, skipping the original buttons.
+      grid.querySelectorAll(".add-to-cart").forEach(button => {
+        if (button.dataset.cartConnected === "true") return;
+
+        button.dataset.cartConnected = "true";
+
+        button.addEventListener("click", () => {
+          if (typeof addBook === "function") {
+            addBook(button);
+          } else {
+            console.error("addBook() was not found in cart.js");
+          }
+        });
+      });
+
       if (typeof refreshCartCount === "function") {
         await refreshCartCount();
+      }
+
+      if (typeof updateCartButtons === "function") {
+        await updateCartButtons();
       }
     });
   </script>
