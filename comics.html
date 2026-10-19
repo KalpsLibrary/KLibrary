@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -169,26 +168,30 @@
           if (existingTitles.has(normalized)) continue;
           existingTitles.add(normalized);
 
-          const card = document.createElement("article");
-          card.className = "book-card";
+         const title = escapeHtml(book.title);
+const author = escapeHtml(book.author || "Unknown author");
+const coverUrl = escapeHtml(book.cover_url || "");
+const bookUrl = "book.html?title=" + encodeURIComponent(book.title);
 
-          const cover = book.cover_url
-            ? `<img class="book-cover" src="${escapeHtml(book.cover_url)}" alt="${escapeHtml(book.title)}">`
-            : "";
+const card = document.createElement("article");
+card.className = "book-card";
 
-          card.innerHTML = `
-            <div class="book-spine">❖</div>
-            ${cover}
-            <div class="book-info">
-              <h3>${escapeHtml(book.title)}</h3>
-              <p>by ${escapeHtml(book.author || "Unknown author")}</p>
-              <div class="book-price">₹${escapeHtml(book.price)} / month</div>
-              <button class="add-to-cart" type="button"
-                aria-label="Add ${escapeHtml(book.title)} to cart">＋</button>
-            </div>
-          `;
-
-          grid.appendChild(card);
+card.innerHTML = `
+  <div class="book-spine">❖</div>
+  <a href="${bookUrl}">
+    ${coverUrl
+      ? `<img class="book-cover" src="${coverUrl}" alt="${title} by ${author}">`
+      : ""}
+  </a>
+  <div class="book-info">
+    <a href="${bookUrl}"><h3>${title}</h3></a>
+    <p>by ${author}</p>
+    <div class="book-price">₹${escapeHtml(book.price)} / month</div>
+    <button class="add-to-cart" type="button"
+      aria-label="Add ${title} to cart">＋</button>
+  </div>
+`;
+grid.appendChild(card);
         }
 
         if (count) {
@@ -206,4 +209,3 @@
   </script>
 </body>
 </html>
-```
