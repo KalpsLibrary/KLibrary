@@ -201,10 +201,21 @@ grid.appendChild(card);
       } catch (error) {
         console.error("Could not load Comics books from Supabase:", error);
       }
+   if (typeof refreshCartCount === "function") {
+  await refreshCartCount();
+}
 
-      if (typeof refreshCartCount === "function") {
-        await refreshCartCount();
-      }
+if (typeof updateCartButtons === "function") {
+  await updateCartButtons();
+}
+
+// Attach the same cart functionality to Supabase-added buttons.
+grid.querySelectorAll(".add-to-cart").forEach(button => {
+  if (button.dataset.cartListenerAttached === "true") return;
+
+  button.dataset.cartListenerAttached = "true";
+  button.addEventListener("click", () => addBook(button));
+});
     });
   </script>
 </body>
