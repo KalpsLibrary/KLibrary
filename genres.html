@@ -331,5 +331,18 @@
       loadBooks();
     });
   </script>
+  <script>
+  function updatePageHeight() {
+    document.body.style.setProperty(
+      "--page-height",
+      document.documentElement.scrollHeight - 36 + "px"
+    );
+  }
+
+  window.addEventListener("load", updatePageHeight);
+  window.addEventListener("resize", updatePageHeight);
+
+  new ResizeObserver(updatePageHeight).observe(document.body);
+</script>
 </body>
 </html>
