@@ -231,14 +231,9 @@
             String(book.price ?? "").replace(/[^\d.]/g, "")
           );
           const price = Number.isFinite(priceValue) ? priceValue : null;
-          const cover = String(book.cover_url || "").trim();
-
           const link = "book.html?title=" + encodeURIComponent(book.title);
 
           card.innerHTML = `
-            ${cover
-              ? `<a href="${link}"><img src="${escapeHtml(cover)}" alt="${title} cover" loading="lazy"></a>`
-              : ""}
             <h3>${title}</h3>
             <p>by ${author}</p>
             <p>${genre}</p>
