@@ -26,7 +26,11 @@ body {
 body::before {
   content: "";
   position: absolute;
-  inset: 18px;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  min-height: calc(100vh - 36px);
   border: 1px solid rgba(103, 75, 42, .28);
   pointer-events: none;
   z-index: 0;
