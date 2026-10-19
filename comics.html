@@ -130,6 +130,11 @@
       const grid = document.getElementById("book-grid");
       const count = document.getElementById("book-count");
 
+// Existing buttons are already handled by cart.js.
+grid.querySelectorAll(".add-to-cart").forEach(button => {
+  button.dataset.cartListenerAttached = "true";
+});
+      
       function normalizeTitle(title) {
         return String(title || "")
           .normalize("NFC")
