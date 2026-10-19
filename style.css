@@ -25,7 +25,7 @@ body {
 
 body::before {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 18px;
   border: 1px solid rgba(103, 75, 42, .28);
   pointer-events: none;
