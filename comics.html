@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,10 @@
       <span class="eyebrow">KLIBRARY • SHELF</span>
       <h1>Comics</h1>
     </div>
-    <div class="header-actions"><a class="back" href="genres.html">← All genres</a><a class="back" href="cart.html">Cart <span class="cart-count">0</span></a></div>
+    <div class="header-actions">
+      <a class="back" href="genres.html">← All genres</a>
+      <a class="back" href="cart.html">Cart <span class="cart-count">0</span></a>
+    </div>
   </header>
 
   <main class="shelf-main">
@@ -24,11 +28,11 @@
       </div>
     </div>
 
-    <div class="book-count">8 TITLES ON THIS SHELF</div>
+    <div class="book-count" id="book-count">8 TITLES ON THIS SHELF</div>
 
-    <section class="book-grid">
+    <section class="book-grid" id="book-grid">
       <article class="book-card">
-<div class="book-spine">❖</div>
+        <div class="book-spine">❖</div>
         <img class="book-cover" src="billi.jpg" alt="Billi and Stuntman">
         <div class="book-info">
           <h3>बिल्ली और स्टंटमैन</h3>
@@ -39,29 +43,29 @@
       </article>
 
       <article class="book-card">
-  <div class="book-spine">❖</div>
-  <img class="book-cover" src="pinkiandicecream.jpg" alt="पिंकी और आइसक्रीम">
-  <div class="book-info">
-    <h3>पिंकी और आइसक्रीम</h3>
-    <p>by प्रान्स</p>
-    <div class="book-price">₹30 / month</div>
-    <button class="add-to-cart" type="button" aria-label="Add पिंकी और आइसक्रीम to cart">＋</button>
-  </div>
-</article>
-      
-      <article class="book-card">
-  <div class="book-spine">❖</div>
-  <img class="book-cover" src="gaja.jpg" alt="गज़ा">
-  <div class="book-info">
-    <h3>चाचा चौधरी और गज़ा</h3>
-    <p>by प्रान्स</p>
-    <div class="book-price">₹30 / month</div>
-    <button class="add-to-cart" type="button" aria-label="Add this book to cart">＋</button>
-  </div>
-</article>
+        <div class="book-spine">❖</div>
+        <img class="book-cover" src="pinkiandicecream.jpg" alt="पिंकी और आइसक्रीम">
+        <div class="book-info">
+          <h3>पिंकी और आइसक्रीम</h3>
+          <p>by प्रान्स</p>
+          <div class="book-price">₹30 / month</div>
+          <button class="add-to-cart" type="button" aria-label="Add पिंकी और आइसक्रीम to cart">＋</button>
+        </div>
+      </article>
 
-<article class="book-card">
-<div class="book-spine">❖</div>
+      <article class="book-card">
+        <div class="book-spine">❖</div>
+        <img class="book-cover" src="gaja.jpg" alt="गज़ा">
+        <div class="book-info">
+          <h3>चाचा चौधरी और गज़ा</h3>
+          <p>by प्रान्स</p>
+          <div class="book-price">₹30 / month</div>
+          <button class="add-to-cart" type="button" aria-label="Add this book to cart">＋</button>
+        </div>
+      </article>
+
+      <article class="book-card">
+        <div class="book-spine">❖</div>
         <img class="book-cover" src="surgicalstrike.jpg" alt="Surgical Strike by Prans">
         <div class="book-info">
           <h3>Chacha Chaudhary and Surgical Strike</h3>
@@ -71,8 +75,8 @@
         </div>
       </article>
 
-<article class="book-card">
-<div class="book-spine">❖</div>
+      <article class="book-card">
+        <div class="book-spine">❖</div>
         <img class="book-cover" src="alexander.jpg" alt="Alexander the Great">
         <div class="book-info">
           <h3>Alexander the Great</h3>
@@ -81,9 +85,9 @@
           <button class="add-to-cart" type="button" aria-label="Add this book to cart">＋</button>
         </div>
       </article>
-      
-    <article class="book-card">
-<div class="book-spine">❖</div>
+
+      <article class="book-card">
+        <div class="book-spine">❖</div>
         <img class="book-cover" src="howfriendsshapeus.jpg" alt="How Friends Shape Us by TruBuddy">
         <div class="book-info">
           <h3>How Friends Shape Us</h3>
@@ -93,8 +97,8 @@
         </div>
       </article>
 
-     <article class="book-card">
-<div class="book-spine">❖</div>
+      <article class="book-card">
+        <div class="book-spine">❖</div>
         <img class="book-cover" src="howtodealwithabully.jpg" alt="How to Deal with a Bully by TruBuddy">
         <div class="book-info">
           <h3>How to Deal with a Bully</h3>
@@ -104,8 +108,8 @@
         </div>
       </article>
 
-     <article class="book-card">
-<div class="book-spine">❖</div>
+      <article class="book-card">
+        <div class="book-spine">❖</div>
         <img class="book-cover" src="theartofmakingfriends.jpg" alt="The Art of Making Friends by TruBuddy">
         <div class="book-info">
           <h3>The Art of Making Friends</h3>
@@ -121,5 +125,85 @@
   <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
   <script src="cart.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const grid = document.getElementById("book-grid");
+      const count = document.getElementById("book-count");
+
+      function normalizeTitle(title) {
+        return String(title || "")
+          .normalize("NFC")
+          .toLowerCase()
+          .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        })[char]);
+      }
+
+      try {
+        const { data, error } = await db
+          .from("library_books")
+          .select("title, author, price, cover_url, available, genre")
+          .eq("genre", "Comics")
+          .eq("available", true)
+          .order("title", { ascending: true });
+
+        if (error) throw error;
+
+        const existingTitles = new Set(
+          Array.from(grid.querySelectorAll(".book-info h3"))
+            .map(heading => normalizeTitle(heading.textContent))
+        );
+
+        for (const book of data || []) {
+          const normalized = normalizeTitle(book.title);
+
+          if (existingTitles.has(normalized)) continue;
+          existingTitles.add(normalized);
+
+          const card = document.createElement("article");
+          card.className = "book-card";
+
+          const cover = book.cover_url
+            ? `<img class="book-cover" src="${escapeHtml(book.cover_url)}" alt="${escapeHtml(book.title)}">`
+            : "";
+
+          card.innerHTML = `
+            <div class="book-spine">❖</div>
+            ${cover}
+            <div class="book-info">
+              <h3>${escapeHtml(book.title)}</h3>
+              <p>by ${escapeHtml(book.author || "Unknown author")}</p>
+              <div class="book-price">₹${escapeHtml(book.price)} / month</div>
+              <button class="add-to-cart" type="button"
+                aria-label="Add ${escapeHtml(book.title)} to cart">＋</button>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        }
+
+        if (count) {
+          count.textContent =
+            `${grid.querySelectorAll(".book-card").length} TITLES ON THIS SHELF`;
+        }
+      } catch (error) {
+        console.error("Could not load Comics books from Supabase:", error);
+      }
+
+      if (typeof refreshCartCount === "function") {
+        await refreshCartCount();
+      }
+    });
+  </script>
 </body>
 </html>
+```
