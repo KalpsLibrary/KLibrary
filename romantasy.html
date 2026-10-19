@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,96 +150,124 @@
   <script src="auth.js"></script>
   <script src="cart.js"></script>
 
- 
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-  const grid = document.getElementById("book-grid");
-  const count = document.getElementById("book-count");
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const grid = document.getElementById("book-grid");
+    const count = document.getElementById("book-count");
 
-  if (!grid || !count) {
-    console.error("Romantasy shelf elements not found.");
-    return;
-  }
+    if (!grid || !count) {
+      console.error("Romantasy shelf elements not found.");
+      return;
+    }
 
-  function normalizeTitle(title) {
-    return String(title || "")
-      .normalize("NFC")
-      .toLowerCase()
-      .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
-  }
-
-  function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>"']/g, char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    })[char]);
-  }
-
-  const existingTitles = new Set(
-    Array.from(grid.querySelectorAll(".book-info h3"))
-      .map(heading => normalizeTitle(heading.textContent))
-  );
-
-  try {
-    const { data, error } = await db
-      .from("library_books")
-      .select("title, author, price, cover_url, available, genre")
-      .eq("genre", "Romantasy")
-      .eq("available", true)
-      .order("title", { ascending: true });
-
-    if (error) throw error;
-
-    (data || []).forEach(book => {
-      const titleKey = normalizeTitle(book.title);
-
-      if (!book.title || existingTitles.has(titleKey)) return;
-
-      const title = escapeHtml(book.title);
-      const author = escapeHtml(book.author || "Unknown author");
-      const cover = escapeHtml(book.cover_url || "");
-      const priceNumber = Number(
-        String(book.price ?? "").replace(/[^\d.]/g, "")
-      );
-      const price = Number.isFinite(priceNumber) ? priceNumber : 80;
-      const bookUrl = "book.html?title=" + encodeURIComponent(book.title);
-
-      const card = document.createElement("article");
-      card.className = "book-card";
-
-      card.innerHTML = `
-        <a href="${bookUrl}">
-          ${cover
-            ? `<img class="book-cover" src="${cover}" alt="${title} by ${author}">`
-            : ""}
-        </a>
-        <div class="book-info">
-          <a href="${bookUrl}"><h3>${title}</h3></a>
-          <p>by ${author}</p>
-          <div class="book-price">₹${price} / month</div>
-          <button class="add-to-cart" type="button"
-            aria-label="Add ${title} to cart">＋</button>
-        </div>
-      `;
-
-      grid.appendChild(card);
-      existingTitles.add(titleKey);
+    // Mark the original buttons so we don't attach duplicate listeners.
+    grid.querySelectorAll(".add-to-cart").forEach(button => {
+      button.dataset.cartConnected = "true";
     });
 
-    count.textContent =
-      `${grid.querySelectorAll(".book-card").length} TITLES ON THIS SHELF`;
+    function normalizeTitle(title) {
+      return String(title || "")
+        .normalize("NFC")
+        .toLowerCase()
+        .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
+    }
 
-  } catch (error) {
-    console.error("Could not load Romantasy books from Supabase:", error);
-  }
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
 
-  if (typeof refreshCartCount === "function") {
-    await refreshCartCount();
-  }
-});
-</script>
+    const existingTitles = new Set(
+      Array.from(grid.querySelectorAll(".book-info h3"))
+        .map(heading => normalizeTitle(heading.textContent))
+    );
+
+    try {
+      const { data, error } = await db
+        .from("library_books")
+        .select("title, author, price, cover_url, available, genre")
+        .eq("genre", "Romantasy")
+        .eq("available", true)
+        .order("title", { ascending: true });
+
+      if (error) throw error;
+
+      (data || []).forEach(book => {
+        const titleKey = normalizeTitle(book.title);
+
+        if (!book.title || existingTitles.has(titleKey)) return;
+
+        const title = escapeHtml(book.title);
+        const author = escapeHtml(book.author || "Unknown author");
+        const cover = escapeHtml(book.cover_url || "");
+
+        const priceNumber = Number(
+          String(book.price ?? "").replace(/[^\d.]/g, "")
+        );
+        const price = Number.isFinite(priceNumber) ? priceNumber : 80;
+
+        const bookUrl =
+          "book.html?title=" + encodeURIComponent(book.title);
+
+        const card = document.createElement("article");
+        card.className = "book-card";
+
+        card.innerHTML = `
+          <a href="${bookUrl}">
+            ${cover
+              ? `<img class="book-cover" src="${cover}" alt="${title} by ${author}">`
+              : ""}
+          </a>
+          <div class="book-info">
+            <a href="${bookUrl}"><h3>${title}</h3></a>
+            <p>by ${author}</p>
+            <div class="book-price">₹${price} / month</div>
+            <button class="add-to-cart" type="button"
+              aria-label="Add ${title} to cart">＋</button>
+          </div>
+        `;
+
+        grid.appendChild(card);
+        existingTitles.add(titleKey);
+      });
+
+      count.textContent =
+        `${grid.querySelectorAll(".book-card").length} TITLES ON THIS SHELF`;
+
+    } catch (error) {
+      console.error("Could not load Romantasy books from Supabase:", error);
+    }
+
+    // Connect only buttons added dynamically from Supabase.
+    // Keep this outside the try/catch so it still runs if loading fails.
+    grid.querySelectorAll(".add-to-cart").forEach(button => {
+      if (button.dataset.cartConnected === "true") return;
+
+      button.dataset.cartConnected = "true";
+
+      button.addEventListener("click", () => {
+        if (typeof addBook === "function") {
+          addBook(button);
+        } else {
+          console.error("addBook() was not found in cart.js");
+        }
+      });
+    });
+
+    if (typeof refreshCartCount === "function") {
+      await refreshCartCount();
+    }
+
+    if (typeof updateCartButtons === "function") {
+      updateCartButtons();
+    }
+  });
+  </script>
+
 </body>
 </html>
