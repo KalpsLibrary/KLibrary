@@ -229,6 +229,23 @@
         const total = grid.querySelectorAll(".book-card").length;
         count.textContent = `${total} TITLES ON THIS SHELF`;
 
+// Connect Add to Cart buttons, including newly loaded Supabase books.
+document.querySelectorAll(".add-to-cart").forEach(button => {
+  if (button.dataset.cartConnected) {
+    return;
+  }
+
+  button.dataset.cartConnected = "true";
+
+  button.addEventListener("click", () => {
+    if (typeof addBook === "function") {
+      addBook(button);
+    } else {
+      console.error("addBook() was not found in cart.js");
+    }
+  });
+});
+        
       } catch (error) {
         console.error("Could not load thriller books from Supabase:", error);
       }
