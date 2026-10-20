@@ -122,10 +122,10 @@
         pickPrice.textContent = Number.isFinite(numericPrice) && String(book.price ?? "").trim() !== "" ? `₹${numericPrice} / month` : (book.price ? `${escapeHtml(book.price)} / month` : "Price unavailable");
         pickLink.href = "book.html?title=" + encodeURIComponent(book.title);
         pickLink.textContent = "Discover Never Lie →";
-        if (book.cover_url) {
+        if (true) {
           const img = document.createElement("img");
           img.className = "pick-cover";
-          img.src = book.cover_url;
+          img.src = "neverlie.jpg";
           img.alt = "Cover of Never Lie by Freida McFadden";
           img.loading = "lazy";
           img.onerror = () => { pickCoverWrap.replaceChildren(); const placeholder = document.createElement("div"); placeholder.className = "pick-placeholder"; placeholder.textContent = "Never Lie"; pickCoverWrap.appendChild(placeholder); };
