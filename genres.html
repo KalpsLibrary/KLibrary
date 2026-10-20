@@ -3,346 +3,194 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KLibrary — The Shelves</title>
+  <title>KLibrary — Home</title>
   <link rel="stylesheet" href="style.css">
-
   <style>
-    .library-search {
-      max-width: 760px;
-      margin: 24px auto;
-    }
-
-    .library-search label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .library-search input {
-      box-sizing: border-box;
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid #c9b8a5;
-      border-radius: 10px;
-      font: inherit;
-      background: #fffdf9;
-      color: #30251e;
-    }
-
-    .search-status {
-      margin: 12px 0;
-      line-height: 1.5;
-    }
-
-    .search-results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 18px;
-      margin: 18px 0 28px;
-    }
-
-    .search-result {
-      padding: 14px;
-      border: 1px solid #e0d4c7;
-      border-radius: 12px;
-      background: #fffdf9;
-      color: #30251e;
-    }
-
-    .search-result img {
-      display: block;
-      width: 100%;
-      height: 210px;
-      object-fit: contain;
-      margin-bottom: 12px;
-    }
-
-    .search-result h3 {
-      margin: 8px 0;
-    }
-
-    .search-result p {
-      margin: 6px 0;
-    }
-
-    .search-result a {
-      color: inherit;
-    }
-
-    .search-result .result-link {
-      display: inline-block;
-      margin-top: 10px;
-      text-decoration: underline;
-    }
-
-    .search-hidden {
-      display: none !important;
-    }
-
-    @media (max-width: 480px) {
-      .search-results {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .search-result {
-        padding: 10px;
-      }
-    }
-    .search-result p:first-of-type {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 18px;
-}
+    .library-search { max-width:760px; margin:24px auto; }
+    .library-search label { display:block; margin-bottom:8px; font-weight:600; }
+    .library-search input { box-sizing:border-box; width:100%; padding:14px 16px; border:1px solid #c9b8a5; border-radius:10px; font:inherit; background:#fffdf9; color:#30251e; }
+    .search-status { margin:12px 0; line-height:1.5; }
+    .search-results { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:18px; margin:18px 0 28px; }
+    .search-result { padding:14px; border:1px solid #e0d4c7; border-radius:12px; background:#fffdf9; color:#30251e; }
+    .search-result img { display:block; width:100%; height:210px; object-fit:contain; margin-bottom:12px; }
+    .search-result h3 { margin:8px 0; }
+    .search-result p { margin:6px 0; }
+    .search-result a { color:inherit; }
+    .search-result .result-link { display:inline-block; margin-top:10px; text-decoration:underline; }
+    .search-hidden { display:none !important; }
+    #welcome { display:none; }
+    .header-actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; }
+    .header-actions .nav-link { display:inline-block; padding:10px 12px; color:#765b3c; text-decoration:none; font-size:14px; border-bottom:1px solid transparent; }
+    .header-actions .nav-link:hover, .header-actions .nav-link[aria-current="page"] { border-bottom-color:#9b7740; color:#3f2e1f; }
+    .genre-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:28px; }
+    .genre-card { min-height:235px; padding:26px; border-radius:2px; }
+    .genre-card h2 { font-size:34px; }
+    .genre-card p { line-height:1.4; }
+    .genre-card.specialeditions { background:linear-gradient(145deg,#f2e7d4,#e2d0b2); }
+    .genre-card.comics { background:linear-gradient(145deg,#f4eee2,#e7dcc9); }
+    .genre-card .card-symbol { margin-bottom:8px; }
+    .librarian-pick { margin-top:58px; padding-top:28px; border-top:1px solid rgba(103,75,42,.3); }
+    .pick-kicker { margin:0 0 8px; color:var(--gold); font-size:11px; letter-spacing:2.5px; text-transform:uppercase; }
+    .librarian-pick h2 { margin:0 0 20px; font-size:40px; font-weight:600; }
+    .pick-card { display:flex; gap:30px; align-items:center; max-width:850px; padding:28px; background:rgba(251,247,239,.9); border:1px solid var(--line); box-shadow:0 12px 30px var(--shadow); }
+    .pick-cover-wrap { width:170px; flex:0 0 170px; }
+    .pick-cover { display:block; width:100%; height:255px; object-fit:cover; box-shadow:0 8px 20px var(--shadow); }
+    .pick-placeholder { height:255px; display:grid; place-items:center; padding:15px; border:1px solid var(--line); background:linear-gradient(145deg,#e8d9c2,#f7efe2); color:var(--gold); text-align:center; font:600 22px "Cormorant Garamond",Georgia,serif; }
+    .pick-info { min-width:0; }
+    .pick-info h3 { margin:0 0 8px; font:600 34px/1.1 "Cormorant Garamond",Georgia,serif; }
+    .pick-author { margin:0 0 16px; color:var(--muted); font:19px "Cormorant Garamond",Georgia,serif; }
+    .pick-price { color:var(--gold); font-weight:700; letter-spacing:.5px; }
+    .pick-description { color:var(--muted); line-height:1.6; }
+    .pick-link { display:inline-block; margin-top:10px; padding:11px 17px; background:#4b3929; color:#fffaf0; text-decoration:none; }
+    .pick-link:hover { background:#5d4631; color:#fffaf0; }
+    @media(max-width:900px) { .genre-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .header-actions { gap:4px; } }
+    @media(max-width:620px) { .site-header { align-items:flex-start; flex-direction:column; gap:16px; } .header-actions { justify-content:flex-start; } .header-actions .nav-link { padding:8px; } .genre-grid { grid-template-columns:1fr; } .genre-card { min-height:205px; } .pick-card { flex-direction:column; align-items:flex-start; padding:22px; } .pick-cover-wrap { width:150px; flex-basis:auto; } .pick-cover,.pick-placeholder { height:225px; } .librarian-pick h2 { font-size:34px; } }
+    @media(max-width:480px) { .search-results { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .search-result { padding:10px; } }
+    .search-result p:first-of-type { font-family:"Cormorant Garamond",Georgia,serif; font-size:18px; }
   </style>
 </head>
-
 <body class="library-page">
   <header class="site-header">
     <div>
       <span class="eyebrow">KLIBRARY</span>
-      <h1>The Shelves</h1>
+      <h1>The Library</h1>
     </div>
-
-    <div class="header-actions">
+    <nav class="header-actions" aria-label="Main navigation">
+      <a class="nav-link" href="genres.html" aria-current="page">Home</a>
+      <a class="nav-link" href="#genre-grid">Browse</a>
+      <a class="back" href="cart.html">Cart <span id="cartCount" class="cart-count">0</span></a>
       <a class="back" href="admin.html">Admin</a>
-      <a class="back" href="cart.html">Cart <span id="cartCount">0</span></a>
       <button id="logoutBtn" class="logout">Log out</button>
-    </div>
+    </nav>
   </header>
-
   <main class="genre-main">
-    <p id="welcome" class="welcome"></p>
-    <p class="intro">Choose a section of the library.</p>
-
+    <p id="welcome" class="welcome" aria-hidden="true"></p>
+    <p class="intro">Browse the shelves and find your next read.</p>
     <section class="library-search" aria-label="Search the library">
       <label for="book-search">Find a book</label>
-      <input
-        id="book-search"
-        type="search"
-        placeholder="Search by title or author..."
-        autocomplete="off"
-      >
-      <p id="search-status" class="search-status" aria-live="polite">
-        Search across all available books in KLibrary.
-      </p>
-      <section
-        id="search-results"
-        class="search-results search-hidden"
-        aria-label="Search results"
-      ></section>
+      <input id="book-search" type="search" placeholder="Search by title or author..." autocomplete="off">
+      <p id="search-status" class="search-status" aria-live="polite">Search across all available books in KLibrary.</p>
+      <section id="search-results" class="search-results search-hidden" aria-label="Search results"></section>
     </section>
-
-    <section class="genre-grid" id="genre-grid">
-      <a class="genre-card romantasy" href="romantasy.html">
-        <span class="card-symbol">❦</span>
-        <h2>Romantasy</h2>
-        <p>Fantasy Romance</p>
-        <span class="open">Open the shelf →</span>
-      </a>
-
-      <a class="genre-card thriller" href="thriller.html">
-        <span class="card-symbol">⌕</span>
-        <h2>Thrillers &amp; Mystery</h2>
-        <p>Secrets, clues &amp; suspense</p>
-        <span class="open">Open the shelf →</span>
-      </a>
-
-      <a class="genre-card selfhelp" href="selfhelp.html">
-        <span class="card-symbol">✦</span>
-        <h2>Non-fiction and Self-Help</h2>
-        <p>Inspiration and Ideas for growing and learning</p>
-        <span class="open">Open the shelf →</span>
-      </a>
-
-      <a class="genre-card specialeditions" href="specialeditions.html">
-        <div class="card-symbol">✧</div>
-        <h2>Special Editions</h2>
-        <p>Beautiful editions, collector's copies and books with something extra.</p>
-        <span class="open">Open shelf →</span>
-      </a>
-
-      <a class="genre-card comics" href="comics.html">
-        <span class="card-symbol">❖</span>
-        <h2>Comics</h2>
-        <p>Fun characters and ridiculous adventures.</p>
-        <span class="open">Open the shelf →</span>
-      </a>
-
-      <a class="genre-card others" href="others.html">
-        <span class="card-symbol">❧</span>
-        <h2>Others</h2>
-        <p>Everything beyond the shelves</p>
-        <span class="open">Open the shelf →</span>
-      </a>
+    <section class="genre-grid" id="genre-grid" aria-label="Browse by genre">
+      <a class="genre-card romantasy" href="romantasy.html"><span class="card-symbol">❦</span><h2>Romantasy</h2><p>Fantasy Romance</p><span class="open">Open the shelf →</span></a>
+      <a class="genre-card thriller" href="thriller.html"><span class="card-symbol">⌕</span><h2>Thrillers &amp; Mystery</h2><p>Secrets, clues &amp; suspense</p><span class="open">Open the shelf →</span></a>
+      <a class="genre-card selfhelp" href="selfhelp.html"><span class="card-symbol">✦</span><h2>Non-fiction and Self-Help</h2><p>Inspiration and ideas for growing and learning.</p><span class="open">Open the shelf →</span></a>
+      <a class="genre-card specialeditions" href="specialeditions.html"><span class="card-symbol">✧</span><h2>Special Editions</h2><p>Beautiful editions, collector's copies and books with something extra.</p><span class="open">Open the shelf →</span></a>
+      <a class="genre-card comics" href="comics.html"><span class="card-symbol">❖</span><h2>Comics</h2><p>Fun characters and ridiculous adventures.</p><span class="open">Open the shelf →</span></a>
+      <a class="genre-card others" href="others.html"><span class="card-symbol">❧</span><h2>Others</h2><p>Everything beyond the shelves.</p><span class="open">Open the shelf →</span></a>
+    </section>
+    <section class="librarian-pick" aria-labelledby="pick-heading">
+      <p class="pick-kicker">A book selected for you</p>
+      <h2 id="pick-heading">The Librarian’s Pick</h2>
+      <article class="pick-card" id="pick-card" aria-live="polite">
+        <div class="pick-cover-wrap"><div class="pick-placeholder">The Librarian’s Pick</div></div>
+        <div class="pick-info"><h3>Never Lie</h3><p class="pick-author">Freida McFadden</p><p class="pick-description">A psychological thriller chosen for this month’s featured shelf.</p><p class="pick-price" id="pick-price">Loading price…</p><a class="pick-link" id="pick-link" href="thriller.html">Discover the book →</a><p id="pick-status" class="small-note"></p></div>
+      </article>
     </section>
   </main>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
   <script src="cart.js"></script>
-
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const searchInput = document.getElementById("book-search");
       const status = document.getElementById("search-status");
       const results = document.getElementById("search-results");
       const genreGrid = document.getElementById("genre-grid");
-
+      const pickPrice = document.getElementById("pick-price");
+      const pickLink = document.getElementById("pick-link");
+      const pickStatus = document.getElementById("pick-status");
+      const pickCoverWrap = document.querySelector(".pick-cover-wrap");
       let books = [];
       let searchLoaded = false;
       let searchFailed = false;
       let debounceTimer;
-
-      function normalize(value) {
-        return String(value || "")
-          .normalize("NFC")
-          .toLowerCase()
-          .trim();
-      }
-
+      function normalize(value) { return String(value || "").normalize("NFC").toLowerCase().trim(); }
       function escapeHtml(value) {
-        return String(value ?? "").replace(/[&<>"']/g, char => ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;"
-        })[char]);
+        return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
       }
-
+      function renderPick() {
+        const book = books.find(item => normalize(item.title) === "never lie");
+        if (!book) {
+          pickPrice.textContent = "Price unavailable";
+          pickStatus.textContent = "Add Never Lie to the available books in the catalogue to show its current price and cover here.";
+          return;
+        }
+        const numericPrice = Number(String(book.price ?? "").replace(/[^\d.]/g, ""));
+        pickPrice.textContent = Number.isFinite(numericPrice) && String(book.price ?? "").trim() !== "" ? `₹${numericPrice} / month` : (book.price ? `${escapeHtml(book.price)} / month` : "Price unavailable");
+        pickLink.href = "book.html?title=" + encodeURIComponent(book.title);
+        pickLink.textContent = "Discover Never Lie →";
+        if (book.cover_url) {
+          const img = document.createElement("img");
+          img.className = "pick-cover";
+          img.src = book.cover_url;
+          img.alt = "Cover of Never Lie by Freida McFadden";
+          img.loading = "lazy";
+          img.onerror = () => { pickCoverWrap.replaceChildren(); const placeholder = document.createElement("div"); placeholder.className = "pick-placeholder"; placeholder.textContent = "Never Lie"; pickCoverWrap.appendChild(placeholder); };
+          pickCoverWrap.replaceChildren(img);
+        }
+        pickStatus.textContent = "";
+      }
       function renderResults(matches, query) {
         results.replaceChildren();
-
         if (!matches.length) {
           results.classList.add("search-hidden");
           status.textContent = `No books found for "${query}". Try another title or author, or browse the genre shelves below.`;
           return;
         }
-
         results.classList.remove("search-hidden");
-        status.textContent =
-          `${matches.length} matching book${matches.length === 1 ? "" : "s"} found.`;
-
+        status.textContent = `${matches.length} matching book${matches.length === 1 ? "" : "s"} found.`;
         matches.forEach(book => {
-          const card = document.createElement("article");
-          card.className = "search-result";
-
-          const title = escapeHtml(book.title);
-          const author = escapeHtml(book.author || "Unknown author");
-          const genre = escapeHtml(book.genre || "Other");
-          const priceValue = Number(
-            String(book.price ?? "").replace(/[^\d.]/g, "")
-          );
-          const price = Number.isFinite(priceValue) ? priceValue : null;
+          const card = document.createElement("article"); card.className = "search-result";
+          if (book.cover_url) { const img = document.createElement("img"); img.src = book.cover_url; img.alt = `Cover of ${book.title || "book"}`; img.loading = "lazy"; card.appendChild(img); }
+          const title = escapeHtml(book.title); const author = escapeHtml(book.author || "Unknown author"); const genre = escapeHtml(book.genre || "Other");
+          const priceValue = Number(String(book.price ?? "").replace(/[^\d.]/g, "")); const price = Number.isFinite(priceValue) ? priceValue : null;
           const link = "book.html?title=" + encodeURIComponent(book.title);
-
-          card.innerHTML = `
-            <h3>${title}</h3>
-            <p>by ${author}</p>
-            <p>${genre}</p>
-            <p>${price !== null ? `₹${price} / month` : "Price unavailable"}</p>
-            <a class="result-link" href="${link}">View book →</a>
-          `;
-
+          card.insertAdjacentHTML("beforeend", `<h3>${title}</h3><p>by ${author}</p><p>${genre}</p><p>${price !== null ? `₹${price} / month` : "Price unavailable"}</p><a class="result-link" href="${link}">View book →</a>`);
           results.appendChild(card);
         });
       }
-
       async function loadBooks() {
         try {
-          if (typeof db === "undefined") {
-            throw new Error("Supabase client 'db' was not found.");
-          }
-
-          const { data, error } = await db
-            .from("library_books")
-            .select("title, author, price, cover_url, genre, available")
-            .eq("available", true)
-            .order("title", { ascending: true });
-
+          if (typeof db === "undefined") throw new Error("Supabase client 'db' was not found.");
+          const { data, error } = await db.from("library_books").select("title, author, price, cover_url, genre, available").eq("available", true).order("title", { ascending: true });
           if (error) throw error;
-
-          books = data || [];
-          searchLoaded = true;
-          searchFailed = false;
-
-          status.textContent =
-            `Search across ${books.length} available book${books.length === 1 ? "" : "s"}.`;
-
-          if (searchInput.value.trim()) {
-            performSearch();
-          }
+          books = data || []; searchLoaded = true; searchFailed = false;
+          status.textContent = `Search across ${books.length} available book${books.length === 1 ? "" : "s"}.`;
+          renderPick();
+          if (searchInput.value.trim()) performSearch();
         } catch (error) {
-          console.error("Could not load books for search:", error);
+          console.error("Could not load books for search or librarian's pick:", error);
           searchFailed = true;
-          status.textContent =
-            "Search is temporarily unavailable. Please try again later.";
+          status.textContent = "Search is temporarily unavailable. Please try again later.";
+          pickPrice.textContent = "Price unavailable";
+          pickStatus.textContent = "The catalogue could not be loaded. Please refresh the page later.";
         }
       }
-
       function performSearch() {
         const query = normalize(searchInput.value);
-
         if (!query) {
-          results.replaceChildren();
-          results.classList.add("search-hidden");
-          genreGrid.classList.remove("search-hidden");
-
-          status.textContent = searchLoaded
-            ? `Search across ${books.length} available book${books.length === 1 ? "" : "s"}.`
-            : "Search across all available books in KLibrary.";
-
+          results.replaceChildren(); results.classList.add("search-hidden"); genreGrid.classList.remove("search-hidden");
+          status.textContent = searchLoaded ? `Search across ${books.length} available book${books.length === 1 ? "" : "s"}.` : "Search across all available books in KLibrary.";
           return;
         }
-
-        genreGrid.classList.add("search-hidden");
-        results.classList.remove("search-hidden");
-
-        if (searchFailed) {
-          status.textContent =
-            "We couldn't load the catalogue. Please refresh the page and try again.";
-          return;
-        }
-
-        if (!searchLoaded) {
-          status.textContent = "Loading books...";
-          return;
-        }
-
-        const matches = books.filter(book => {
-          const title = normalize(book.title);
-          const author = normalize(book.author);
-          const genre = normalize(book.genre);
-
-          return title.includes(query)
-            || author.includes(query)
-            || genre.includes(query);
-        });
-
+        genreGrid.classList.add("search-hidden"); results.classList.remove("search-hidden");
+        if (searchFailed) { status.textContent = "We couldn't load the catalogue. Please refresh the page and try again."; return; }
+        if (!searchLoaded) { status.textContent = "Loading books..."; return; }
+        const matches = books.filter(book => normalize(book.title).includes(query) || normalize(book.author).includes(query) || normalize(book.genre).includes(query));
         renderResults(matches, searchInput.value.trim());
       }
-
-      searchInput.addEventListener("input", () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(performSearch, 150);
-      });
-
+      searchInput.addEventListener("input", () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(performSearch, 150); });
       loadBooks();
     });
   </script>
   <script>
-  function updatePageHeight() {
-    document.body.style.setProperty(
-      "--page-height",
-      document.documentElement.scrollHeight - 36 + "px"
-    );
-  }
-
-  window.addEventListener("load", updatePageHeight);
-  window.addEventListener("resize", updatePageHeight);
-
-  new ResizeObserver(updatePageHeight).observe(document.body);
-</script>
+    function updatePageHeight() { document.body.style.setProperty("--page-height", document.documentElement.scrollHeight - 36 + "px"); }
+    window.addEventListener("load", updatePageHeight);
+    window.addEventListener("resize", updatePageHeight);
+    new ResizeObserver(updatePageHeight).observe(document.body);
+  </script>
 </body>
 </html>
