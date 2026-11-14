@@ -119,13 +119,19 @@
       const { data, error } = await db
         .from("library_books")
         .select("title, author, price, cover_url, available, genre")
-        .eq("genre", "Romantasy")
+        const { data, error } = await db
+  .from("library_books")
+  .select("title, author, price, cover_url, available, genre")
+  .eq("genre", "Romantasy")
+  .eq("available", true)
+  .order("title", { ascending: true });
+
+if (error) throw error;
         .eq("available", true)
         .order("title", { ascending: true });
 
       if (error) throw error;
-
-      (data || []).forEach(book => {
+      romantasyBooks.forEach(book => {
         const titleKey = normalizeTitle(book.title);
 
         if (!book.title || existingTitles.has(titleKey)) return;
