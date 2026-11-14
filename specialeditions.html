@@ -351,9 +351,9 @@
           price,
           description,
           cover_url,
-          available
+          available,
+          genre
         `)
-        .eq("genre", "Special Editions")
         .eq("available", true)
         .order("title");
 
@@ -380,7 +380,7 @@
          twice if you eventually put them into Supabase.
          ===================================================== */
 
-      const newBooks = books.filter(book => {
+      const newBooks = specialEditionBooks.filter(book => {
 
         return !existingBooks.some(existingTitle =>
           existingTitle.toLowerCase() ===
