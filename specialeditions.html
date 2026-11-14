@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +24,6 @@
     </div>
   </header>
 
-
   <main class="shelf-main">
 
     <div class="shelf-heading">
@@ -37,19 +37,13 @@
       </div>
     </div>
 
-
-    <!-- This will be updated automatically if new books are added -->
     <div class="book-count" id="bookCount">
       4 TITLES ON THIS SHELF
     </div>
 
-
     <section class="book-grid" id="bookGrid">
 
-
-      <!-- =====================================================
-           EXISTING BOOK 1 — HARRY POTTER
-           ===================================================== -->
+      <!-- EXISTING BOOK 1 — HARRY POTTER -->
 
       <article class="book-card">
 
@@ -76,7 +70,6 @@
           </div>
 
           <div class="special-features">
-
             <strong>What's special:</strong>
 
             <ul>
@@ -85,7 +78,6 @@
               <li>Glossy paper</li>
               <li>Special edition</li>
             </ul>
-
           </div>
 
           <button
@@ -95,13 +87,9 @@
           >＋</button>
 
         </div>
-
       </article>
 
-
-      <!-- =====================================================
-           EXISTING BOOK 2 — INTO THE TAYLOR-VERSE
-           ===================================================== -->
+      <!-- EXISTING BOOK 2 — INTO THE TAYLOR-VERSE -->
 
       <article class="book-card">
 
@@ -128,7 +116,6 @@
           </div>
 
           <div class="special-features">
-
             <strong>What's special:</strong>
 
             <ul>
@@ -136,7 +123,6 @@
               <li>Illustrated</li>
               <li>Glossy paper</li>
             </ul>
-
           </div>
 
           <button
@@ -146,13 +132,9 @@
           >＋</button>
 
         </div>
-
       </article>
 
-
-      <!-- =====================================================
-           EXISTING BOOK 3 — BECOMING SUPERNATURAL
-           ===================================================== -->
+      <!-- EXISTING BOOK 3 — BECOMING SUPERNATURAL -->
 
       <article class="book-card">
 
@@ -179,7 +161,6 @@
           </div>
 
           <div class="special-features">
-
             <strong>What's special:</strong>
 
             <ul>
@@ -188,7 +169,6 @@
               <li>With images</li>
               <li>Free bookmark</li>
             </ul>
-
           </div>
 
           <button
@@ -198,13 +178,9 @@
           >＋</button>
 
         </div>
-
       </article>
 
-
-      <!-- =====================================================
-           EXISTING BOOK 4 — HEALER
-           ===================================================== -->
+      <!-- EXISTING BOOK 4 — HEALER -->
 
       <article class="book-card">
 
@@ -231,14 +207,12 @@
           </div>
 
           <div class="special-features">
-
             <strong>What's special:</strong>
 
             <ul>
               <li>Hardcover</li>
               <li>Limited book</li>
             </ul>
-
           </div>
 
           <button
@@ -248,42 +222,24 @@
           >＋</button>
 
         </div>
-
       </article>
 
-
-      <!-- =====================================================
-           NEW ADMIN BOOKS WILL BE ADDED HERE AUTOMATICALLY
-           ===================================================== -->
+      <!-- ADMIN BOOKS -->
 
       <div id="dynamicBooks"></div>
 
     </section>
-
   </main>
 
-
-  <!-- =========================================================
-       SCRIPTS
-       ========================================================= -->
+  <!-- SCRIPTS -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script src="supabase-config.js"></script>
-
   <script src="auth.js"></script>
-
   <script src="cart.js"></script>
 
-
   <script>
-
-    /* =========================================================
-       EXISTING BOOKS
-
-       These are already written in HTML, so we don't want
-       Supabase to create duplicates of them.
-       ========================================================= */
 
     const existingBooks = [
       "Harry Potter and the Goblet of Fire",
@@ -292,27 +248,14 @@
       "Healer"
     ];
 
-
-    /* =========================================================
-       MAKE A URL-FRIENDLY BOOK NAME
-       ========================================================= */
-
     function makeBookSlug(title) {
-
       return title
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "")
         .trim();
-
     }
 
-
-    /* =========================================================
-       PROTECT HTML
-       ========================================================= */
-
     function escapeHtml(value) {
-
       return String(value).replace(
         /[&<>'"]/g,
         character => ({
@@ -323,13 +266,7 @@
           '"': "&quot;"
         })[character]
       );
-
     }
-
-
-    /* =========================================================
-       LOAD NEW SPECIAL EDITIONS FROM SUPABASE
-       ========================================================= */
 
     async function loadAdminBooks() {
 
@@ -339,6 +276,8 @@
       const bookCount =
         document.getElementById("bookCount");
 
+      // Fetch available books from Supabase.
+      // Do NOT filter by exact genre here.
 
       const {
         data: books,
@@ -357,42 +296,36 @@
         .eq("available", true)
         .order("title");
 
-
       if (error) {
-
         console.error(
           "Could not load Special Editions:",
           error
         );
-
         return;
-
       }
-
 
       if (!books) return;
 
+      // Include books tagged Special Editions,
+      // including books with multiple comma-separated genres.
 
-      /* =====================================================
-         REMOVE BOOKS THAT ALREADY EXIST IN THE HTML
+      const specialEditionBooks = books.filter(book =>
+        String(book.genre || "")
+          .split(",")
+          .map(genre => genre.trim())
+          .includes("Special Editions")
+      );
 
-         This prevents your four existing books from appearing
-         twice if you eventually put them into Supabase.
-         ===================================================== */
+      // Remove books already written in the HTML.
 
-      const newBooks = specialEditionBooks.filter(book => {
-
-        return !existingBooks.some(existingTitle =>
+      const newBooks = specialEditionBooks.filter(book =>
+        !existingBooks.some(existingTitle =>
           existingTitle.toLowerCase() ===
           book.title.toLowerCase()
-        );
+        )
+      );
 
-      });
-
-
-      /* =====================================================
-         ADD NEW BOOKS
-         ===================================================== */
+      // Add new books.
 
       newBooks.forEach(book => {
 
@@ -401,17 +334,14 @@
 
         card.className = "book-card";
 
-
         const slug =
           makeBookSlug(book.title);
-
 
         card.innerHTML = `
 
           <div class="book-spine">
             ✧
           </div>
-
 
           <a href="book.html?book=${encodeURIComponent(slug)}">
 
@@ -423,7 +353,6 @@
 
           </a>
 
-
           <div class="book-info">
 
             <a href="book.html?book=${encodeURIComponent(slug)}">
@@ -434,16 +363,14 @@
 
             </a>
 
-
             <p>
               by ${escapeHtml(book.author || "Unknown author")}
             </p>
 
-
             <div class="book-price">
               ₹${Number(book.price).toFixed(0)} / month
             </div>
-            
+
             <button
               class="add-to-cart"
               type="button"
@@ -456,27 +383,16 @@
 
         `;
 
-
         dynamicBooks.appendChild(card);
 
       });
 
-
-      /* =====================================================
-         UPDATE BOOK COUNT
-
-         4 existing books + new Supabase books
-         ===================================================== */
+      // Update book count.
 
       bookCount.textContent =
         `${4 + newBooks.length} TITLES ON THIS SHELF`;
 
-
-      /* =====================================================
-         CONNECT ADD-TO-CART BUTTONS
-
-         This also connects the newly-created buttons.
-         ===================================================== */
+      // Connect add-to-cart buttons.
 
       document
         .querySelectorAll(".add-to-cart")
@@ -493,15 +409,11 @@
             () => {
 
               if (typeof addBook === "function") {
-
                 addBook(button);
-
               } else {
-
                 console.error(
                   "addBook() was not found in cart.js"
                 );
-
               }
 
             }
@@ -511,10 +423,7 @@
 
     }
 
-
-    /* =========================================================
-       START
-       ========================================================= */
+    // Start.
 
     document.addEventListener(
       "DOMContentLoaded",
@@ -528,19 +437,24 @@
 
       }
     );
+
   </script>
+
   <script>
-  function updatePageHeight() {
-    document.body.style.setProperty(
-      "--page-height",
-      document.documentElement.scrollHeight - 36 + "px"
-    );
-  }
 
-  window.addEventListener("load", updatePageHeight);
-  window.addEventListener("resize", updatePageHeight);
+    function updatePageHeight() {
+      document.body.style.setProperty(
+        "--page-height",
+        document.documentElement.scrollHeight - 36 + "px"
+      );
+    }
 
-  new ResizeObserver(updatePageHeight).observe(document.body);
-</script>
-</body>  
+    window.addEventListener("load", updatePageHeight);
+    window.addEventListener("resize", updatePageHeight);
+
+    new ResizeObserver(updatePageHeight).observe(document.body);
+
+  </script>
+
+</body>
 </html>
