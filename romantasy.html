@@ -17,61 +17,95 @@
 
     <div class="header-actions">
       <a class="back" href="genres.html">← All genres</a>
-      <a class="back" href="cart.html">Cart <span class="cart-count">0</span></a>
+      <a class="back" href="cart.html">
+        Cart <span class="cart-count">0</span>
+      </a>
     </div>
   </header>
 
   <main class="shelf-main">
+
     <div class="shelf-heading">
       <div class="shelf-mark">❦</div>
       <div>
         <h2>Romantasy</h2>
-        <p> Romance, Fantasy and Romantasy </p>
+        <p>Romance, Fantasy and Romantasy</p>
       </div>
     </div>
 
-    <div class="book-count" id="book-count">9 TITLES ON THIS SHELF</div>
+    <div class="book-count" id="book-count">
+      3 TITLES ON THIS SHELF
+    </div>
 
     <section class="book-grid" id="book-grid">
 
-       <article class="book-card">
+      <!-- EXISTING BOOK 1 — SHATTER ME -->
+
+      <article class="book-card">
         <a href="book.html?book=shatterme">
           <img class="book-cover" src="shatterme.jpg" alt="Shatter Me by Tahereh Mafi">
         </a>
+
         <div class="book-info">
-          <a href="book.html?book=shatterme"><h3>Shatter Me</h3></a>
+          <a href="book.html?book=shatterme">
+            <h3>Shatter Me</h3>
+          </a>
+
           <p>by Tahereh Mafi</p>
+
           <div class="book-price">₹80 / month</div>
-          <button class="add-to-cart" type="button" aria-label="Add this book to cart">＋</button>
+
+          <button class="add-to-cart" type="button"
+            aria-label="Add this book to cart">＋</button>
         </div>
       </article>
+
+      <!-- EXISTING BOOK 2 — UNRAVEL ME -->
 
       <article class="book-card">
         <a href="book.html?book=unravelme">
           <img class="book-cover" src="unravelme.jpg" alt="Unravel Me by Tahereh Mafi">
         </a>
+
         <div class="book-info">
-          <a href="book.html?book=unravelme"><h3>Unravel Me</h3></a>
+          <a href="book.html?book=unravelme">
+            <h3>Unravel Me</h3>
+          </a>
+
           <p>by Tahereh Mafi</p>
+
           <div class="book-price">₹80 / month</div>
-          <button class="add-to-cart" type="button" aria-label="Add this book to cart">＋</button>
+
+          <button class="add-to-cart" type="button"
+            aria-label="Add this book to cart">＋</button>
         </div>
       </article>
+
+      <!-- EXISTING BOOK 3 — IGNITE ME -->
 
       <article class="book-card">
         <a href="book.html?book=igniteme">
           <img class="book-cover" src="igniteme.jpg" alt="Ignite Me by Tahereh Mafi">
         </a>
+
         <div class="book-info">
-          <a href="book.html?book=igniteme"><h3>Ignite Me</h3></a>
+          <a href="book.html?book=igniteme">
+            <h3>Ignite Me</h3>
+          </a>
+
           <p>by Tahereh Mafi</p>
+
           <div class="book-price">₹80 / month</div>
-          <button class="add-to-cart" type="button" aria-label="Add this book to cart">＋</button>
+
+          <button class="add-to-cart" type="button"
+            aria-label="Add this book to cart">＋</button>
         </div>
       </article>
 
     </section>
   </main>
+
+  <!-- SCRIPTS -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
@@ -80,6 +114,7 @@
 
   <script>
   document.addEventListener("DOMContentLoaded", async () => {
+
     const grid = document.getElementById("book-grid");
     const count = document.getElementById("book-count");
 
@@ -88,7 +123,8 @@
       return;
     }
 
-    // Mark the original buttons so we don't attach duplicate listeners.
+    // Mark original buttons so duplicate listeners aren't attached.
+
     grid.querySelectorAll(".add-to-cart").forEach(button => {
       button.dataset.cartConnected = "true";
     });
@@ -116,22 +152,33 @@
     );
 
     try {
-      const { data, error } = await db
+
+      // FETCH ALL AVAILABLE BOOKS FROM SUPABASE.
+
+      const { data: books, error } = await db
         .from("library_books")
         .select("title, author, price, cover_url, available, genre")
-        const { data, error } = await db
-  .from("library_books")
-  .select("title, author, price, cover_url, available, genre")
-  .eq("genre", "Romantasy")
-  .eq("available", true)
-  .order("title", { ascending: true });
-
-if (error) throw error;
         .eq("available", true)
         .order("title", { ascending: true });
 
       if (error) throw error;
+      if (!books) return;
+
+      // FILTER BOOKS BY ROMANTASY.
+      // Supports comma-separated genres such as:
+      // Romantasy, Special Editions
+
+      const romantasyBooks = books.filter(book =>
+        String(book.genre || "")
+          .split(",")
+          .map(genre => genre.trim())
+          .includes("Romantasy")
+      );
+
+      // ADD ADMIN BOOKS WITHOUT DUPLICATING EXISTING HTML BOOKS.
+
       romantasyBooks.forEach(book => {
+
         const titleKey = normalizeTitle(book.title);
 
         if (!book.title || existingTitles.has(titleKey)) return;
@@ -143,6 +190,7 @@ if (error) throw error;
         const priceNumber = Number(
           String(book.price ?? "").replace(/[^\d.]/g, "")
         );
+
         const price = Number.isFinite(priceNumber) ? priceNumber : 80;
 
         const bookUrl =
@@ -157,10 +205,18 @@ if (error) throw error;
               ? `<img class="book-cover" src="${cover}" alt="${title} by ${author}">`
               : ""}
           </a>
+
           <div class="book-info">
-            <a href="${bookUrl}"><h3>${title}</h3></a>
+            <a href="${bookUrl}">
+              <h3>${title}</h3>
+            </a>
+
             <p>by ${author}</p>
-            <div class="book-price">₹${price} / month</div>
+
+            <div class="book-price">
+              ₹${price} / month
+            </div>
+
             <button class="add-to-cart" type="button"
               aria-label="Add ${title} to cart">＋</button>
           </div>
@@ -168,30 +224,42 @@ if (error) throw error;
 
         grid.appendChild(card);
         existingTitles.add(titleKey);
+
       });
+
+      // UPDATE BOOK COUNT.
 
       count.textContent =
         `${grid.querySelectorAll(".book-card").length} TITLES ON THIS SHELF`;
 
     } catch (error) {
-      console.error("Could not load Romantasy books from Supabase:", error);
+      console.error(
+        "Could not load Romantasy books from Supabase:",
+        error
+      );
     }
 
-    // Connect only buttons added dynamically from Supabase.
-    // Keep this outside the try/catch so it still runs if loading fails.
+    // CONNECT ADD-TO-CART BUTTONS.
+
     grid.querySelectorAll(".add-to-cart").forEach(button => {
+
       if (button.dataset.cartConnected === "true") return;
 
       button.dataset.cartConnected = "true";
 
       button.addEventListener("click", () => {
+
         if (typeof addBook === "function") {
           addBook(button);
         } else {
           console.error("addBook() was not found in cart.js");
         }
+
       });
+
     });
+
+    // REFRESH CART.
 
     if (typeof refreshCartCount === "function") {
       await refreshCartCount();
@@ -200,9 +268,13 @@ if (error) throw error;
     if (typeof updateCartButtons === "function") {
       updateCartButtons();
     }
+
   });
   </script>
-<script>
+
+  <!-- PAGE HEIGHT -->
+
+  <script>
   function updatePageHeight() {
     document.body.style.setProperty(
       "--page-height",
@@ -214,6 +286,7 @@ if (error) throw error;
   window.addEventListener("resize", updatePageHeight);
 
   new ResizeObserver(updatePageHeight).observe(document.body);
-</script>
+  </script>
+
 </body>
 </html>
