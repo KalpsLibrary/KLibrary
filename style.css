@@ -789,3 +789,6 @@ body.special-editions::before {
   border-color: #9f8a70;
   transform: translateY(-1px);
 }
+#dynamicBooks {
+    display: contents;
+}
