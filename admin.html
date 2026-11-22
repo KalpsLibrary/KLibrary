@@ -14,7 +14,6 @@
 
 <body class="admin-page">
 
-  <!-- HEADER -->
   <header class="site-header">
     <div>
       <span class="eyebrow">KLIBRARY • ADMIN</span>
@@ -26,9 +25,6 @@
     </div>
   </header>
 
-
-  <!-- ADMIN CONTENT -->
-  <!-- Hidden until the correct Supabase account is verified -->
   <main class="admin-main" id="adminContent" style="display: none;">
 
     <section class="admin-card">
@@ -44,7 +40,6 @@
       <form id="bookForm">
 
         <label for="title">Book Title</label>
-
         <input
           type="text"
           id="title"
@@ -52,9 +47,7 @@
           placeholder="e.g. The Silent Patient"
         >
 
-
         <label for="author">Author</label>
-
         <input
           type="text"
           id="author"
@@ -62,9 +55,7 @@
           placeholder="e.g. Alex Michaelides"
         >
 
-
         <label for="price">Price per month</label>
-
         <input
           type="number"
           id="price"
@@ -72,7 +63,6 @@
           required
           placeholder="50"
         >
-
 
         <label for="genre">Genre</label>
 
@@ -86,6 +76,19 @@
           <option value="Comics">Comics</option>
         </select>
 
+        <!-- WHAT'S SPECIAL: Only visible for Special Editions -->
+
+        <div id="specialFeaturesSection" style="display: none;">
+
+          <label for="specialFeatures">What's special?</label>
+
+          <textarea
+            id="specialFeatures"
+            rows="5"
+            placeholder="Enter each feature on a new line...&#10;e.g. Hardcover&#10;Illustrated&#10;Glossy paper"
+          ></textarea>
+
+        </div>
 
         <label for="description">Description</label>
 
@@ -96,7 +99,6 @@
           placeholder="Enter the book description..."
         ></textarea>
 
-
         <label for="cover">Book Cover</label>
 
         <input
@@ -105,7 +107,6 @@
           accept="image/*"
           required
         >
-
 
         <button type="submit">
           Add Book
@@ -118,7 +119,6 @@
     </section>
 
   </main>
-
 
   <script>
 
@@ -141,13 +141,9 @@
         error
       } = await db.auth.getUser();
 
-
       if (error) {
         console.error(error);
       }
-
-
-      /* Not logged in OR not your account */
 
       if (!user || user.id !== ADMIN_UID) {
 
@@ -159,9 +155,7 @@
             text-align:center;
             padding:30px;
           ">
-
             <div>
-
               <h1>Access Denied</h1>
 
               <p>
@@ -172,23 +166,45 @@
               <a href="genres.html">
                 Return to KLibrary
               </a>
-
             </div>
-
           </main>
         `;
 
         return false;
       }
 
-
-      /* Correct account */
-
       document.getElementById("adminContent").style.display =
         "block";
 
       return true;
     }
+
+
+    /* =========================
+       SPECIAL EDITIONS FIELD
+    ========================= */
+
+    const genreSelect = document.getElementById("genre");
+    const specialFeaturesSection =
+      document.getElementById("specialFeaturesSection");
+    const specialFeaturesInput =
+      document.getElementById("specialFeatures");
+
+    genreSelect.addEventListener("change", () => {
+
+      const isSpecialEdition =
+        genreSelect.value === "Special Editions";
+
+      specialFeaturesSection.style.display =
+        isSpecialEdition ? "block" : "none";
+
+      specialFeaturesInput.required = isSpecialEdition;
+
+      if (!isSpecialEdition) {
+        specialFeaturesInput.value = "";
+      }
+
+    });
 
 
     /* =========================
@@ -203,7 +219,6 @@
 
         if (!allowed) return;
 
-
         const form =
           document.getElementById("bookForm");
 
@@ -217,13 +232,8 @@
 
             event.preventDefault();
 
-
-            message.textContent =
-              "Adding book...";
-
-            message.className =
-              "message";
-
+            message.textContent = "Adding book...";
+            message.className = "message";
 
             const title =
               document.getElementById("title")
@@ -245,6 +255,13 @@
               document.getElementById("description")
                 .value.trim();
 
+            const specialFeatures =
+              specialFeaturesInput.value
+                .split("\n")
+                .map(feature => feature.trim())
+                .filter(Boolean)
+                .join("\n");
+
             const coverFile =
               document.getElementById("cover")
                 .files[0];
@@ -255,8 +272,7 @@
               message.textContent =
                 "Please choose a cover image.";
 
-              message.className =
-                "message error";
+              message.className = "message error";
 
               return;
             }
@@ -264,9 +280,7 @@
 
             try {
 
-              /* =========================
-                 UPLOAD COVER
-              ========================= */
+              /* UPLOAD COVER */
 
               const fileName =
                 `${Date.now()}-${coverFile.name.replace(
@@ -274,38 +288,27 @@
                   ""
                 )}`;
 
-
               const {
                 error: uploadError
               } = await db.storage
                 .from("book-covers")
-                .upload(
-                  fileName,
-                  coverFile
-                );
-
+                .upload(fileName, coverFile);
 
               if (uploadError) {
                 throw uploadError;
               }
 
 
-              /* =========================
-                 GET COVER URL
-              ========================= */
+              /* GET COVER URL */
 
               const {
                 data: { publicUrl }
               } = db.storage
                 .from("book-covers")
-                .getPublicUrl(
-                  fileName
-                );
+                .getPublicUrl(fileName);
 
 
-              /* =========================
-                 ADD BOOK TO DATABASE
-              ========================= */
+              /* ADD BOOK TO DATABASE */
 
               const {
                 error: bookError
@@ -314,51 +317,44 @@
                 .insert({
 
                   title: title,
-
                   author: author,
-
                   price: price,
-
                   genre: genre,
-
                   description: description,
-
                   cover_url: publicUrl,
-
-                  available: true
+                  available: true,
+                  special_features:
+                    genre === "Special Editions"
+                      ? specialFeatures
+                      : null
 
                 });
-
 
               if (bookError) {
                 throw bookError;
               }
 
 
-              /* =========================
-                 SUCCESS
-              ========================= */
+              /* SUCCESS */
 
               message.textContent =
                 "Book added successfully!";
 
-              message.className =
-                "message success";
-
+              message.className = "message success";
 
               form.reset();
 
+              specialFeaturesSection.style.display = "none";
+              specialFeaturesInput.required = false;
 
             } catch (error) {
 
               console.error(error);
 
               message.textContent =
-                error.message ||
-                "Something went wrong.";
+                error.message || "Something went wrong.";
 
-              message.className =
-                "message error";
+              message.className = "message error";
 
             }
 
