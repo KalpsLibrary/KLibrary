@@ -64,19 +64,54 @@
           placeholder="50"
         >
 
-        <label for="genre">Genre</label>
+        <!-- MULTIPLE GENRES -->
 
-        <select id="genre" required>
-          <option value="">Select a genre</option>
-          <option value="Romantasy">Romantasy</option>
-          <option value="Thrillers & Mystery">Thrillers & Mystery</option>
-          <option value="Self-help">Self-help</option>
-          <option value="Others">Others</option>
-          <option value="Special Editions">Special Editions</option>
-          <option value="Comics">Comics</option>
-        </select>
+        <label>Select Genres</label>
 
-        <!-- WHAT'S SPECIAL: Only visible for Special Editions -->
+        <div id="genreOptions" style="
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+          margin: 12px 0 20px;
+        ">
+
+          <label>
+            <input type="checkbox" name="genre" value="Romantasy">
+            Romantasy
+          </label>
+
+          <label>
+            <input type="checkbox" name="genre" value="Thrillers & Mystery">
+            Thrillers & Mystery
+          </label>
+
+          <label>
+            <input type="checkbox" name="genre" value="Self-help">
+            Self-help
+          </label>
+
+          <label>
+            <input type="checkbox" name="genre" value="Others">
+            Others
+          </label>
+
+          <label>
+            <input type="checkbox" name="genre" value="Special Editions">
+            Special Editions
+          </label>
+
+          <label>
+            <input type="checkbox" name="genre" value="Comics">
+            Comics
+          </label>
+
+        </div>
+
+        <p style="font-size: 13px; margin-top: -10px;">
+          You can select more than one genre.
+        </p>
+
+        <!-- WHAT'S SPECIAL -->
 
         <div id="specialFeaturesSection" style="display: none;">
 
@@ -181,29 +216,44 @@
 
 
     /* =========================
-       SPECIAL EDITIONS FIELD
+       GENRE SELECTION
     ========================= */
 
-    const genreSelect = document.getElementById("genre");
+    const genreCheckboxes =
+      document.querySelectorAll('input[name="genre"]');
+
     const specialFeaturesSection =
       document.getElementById("specialFeaturesSection");
+
     const specialFeaturesInput =
       document.getElementById("specialFeatures");
 
-    genreSelect.addEventListener("change", () => {
 
-      const isSpecialEdition =
-        genreSelect.value === "Special Editions";
+    function updateSpecialFeaturesVisibility() {
+
+      const specialEditionSelected =
+        Array.from(genreCheckboxes).some(checkbox =>
+          checkbox.checked &&
+          checkbox.value === "Special Editions"
+        );
 
       specialFeaturesSection.style.display =
-        isSpecialEdition ? "block" : "none";
+        specialEditionSelected ? "block" : "none";
 
-      specialFeaturesInput.required = isSpecialEdition;
+      specialFeaturesInput.required =
+        specialEditionSelected;
 
-      if (!isSpecialEdition) {
+      if (!specialEditionSelected) {
         specialFeaturesInput.value = "";
       }
+    }
 
+
+    genreCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener(
+        "change",
+        updateSpecialFeaturesVisibility
+      );
     });
 
 
@@ -235,6 +285,7 @@
             message.textContent = "Adding book...";
             message.className = "message";
 
+
             const title =
               document.getElementById("title")
                 .value.trim();
@@ -248,16 +299,24 @@
                 document.getElementById("price").value
               );
 
+            const selectedGenres =
+              Array.from(genreCheckboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+
             const genre =
-              document.getElementById("genre").value;
+              selectedGenres.join(", ");
 
             const description =
               document.getElementById("description")
                 .value.trim();
 
+            const specialEditionSelected =
+              selectedGenres.includes("Special Editions");
+
             const specialFeatures =
               specialFeaturesInput.value
-                .split("\n")
+                .split(/\r?\n/)
                 .map(feature => feature.trim())
                 .filter(Boolean)
                 .join("\n");
@@ -265,6 +324,28 @@
             const coverFile =
               document.getElementById("cover")
                 .files[0];
+
+
+            if (selectedGenres.length === 0) {
+
+              message.textContent =
+                "Please select at least one genre.";
+
+              message.className = "message error";
+
+              return;
+            }
+
+
+            if (specialEditionSelected && !specialFeatures) {
+
+              message.textContent =
+                "Please enter what's special about this edition.";
+
+              message.className = "message error";
+
+              return;
+            }
 
 
             if (!coverFile) {
@@ -323,8 +404,9 @@
                   description: description,
                   cover_url: publicUrl,
                   available: true,
+
                   special_features:
-                    genre === "Special Editions"
+                    specialEditionSelected
                       ? specialFeatures
                       : null
 
@@ -344,8 +426,7 @@
 
               form.reset();
 
-              specialFeaturesSection.style.display = "none";
-              specialFeaturesInput.required = false;
+              updateSpecialFeaturesVisibility();
 
             } catch (error) {
 
