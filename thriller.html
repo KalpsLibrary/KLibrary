@@ -184,7 +184,6 @@
         const { data, error } = await db
           .from("library_books")
           .select("title, author, price, cover_url, available, genre")
-          .eq("genre", "Thrillers & Mystery")
           .eq("available", true)
           .order("title", { ascending: true });
 
@@ -195,42 +194,49 @@
             .map(heading => normalizeTitle(heading.textContent))
         );
 
-        (data || []).forEach(book => {
-          const titleKey = normalizeTitle(book.title);
+        (data || [])
+          .filter(book =>
+            String(book.genre || "")
+              .split(",")
+              .map(genre => genre.trim())
+              .includes("Thrillers & Mystery")
+          )
+          .forEach(book => {
+            const titleKey = normalizeTitle(book.title);
 
-          if (!book.title || existingTitles.has(titleKey)) return;
+            if (!book.title || existingTitles.has(titleKey)) return;
 
-          const title = escapeHtml(book.title);
-          const author = escapeHtml(book.author || "Unknown author");
-          const cover = escapeHtml(book.cover_url || "");
-          const priceNumber = Number(
-            String(book.price ?? "").replace(/[^\d.]/g, "")
-          );
-          const price = Number.isFinite(priceNumber) ? priceNumber : 50;
-          const bookUrl = "book.html?book=" + encodeURIComponent(titleKey);
+            const title = escapeHtml(book.title);
+            const author = escapeHtml(book.author || "Unknown author");
+            const cover = escapeHtml(book.cover_url || "");
+            const priceNumber = Number(
+              String(book.price ?? "").replace(/[^\d.]/g, "")
+            );
+            const price = Number.isFinite(priceNumber) ? priceNumber : 50;
+            const bookUrl = "book.html?book=" + encodeURIComponent(titleKey);
 
-          const card = document.createElement("article");
-          card.className = "book-card";
+            const card = document.createElement("article");
+            card.className = "book-card";
 
-          card.innerHTML = `
-            <div class="book-spine">⌕</div>
-            <a href="${bookUrl}">
-              ${cover
-                ? `<img class="book-cover" src="${cover}" alt="${title} by ${author}">`
-                : ""}
-            </a>
-            <div class="book-info">
-              <a href="${bookUrl}"><h3>${title}</h3></a>
-              <p>by ${author}</p>
-              <div class="book-price">₹${price} / month</div>
-              <button class="add-to-cart" type="button"
-                aria-label="Add ${title} to cart">＋</button>
-            </div>
-          `;
+            card.innerHTML = `
+              <div class="book-spine">⌕</div>
+              <a href="${bookUrl}">
+                ${cover
+                  ? `<img class="book-cover" src="${cover}" alt="${title} by ${author}">`
+                  : ""}
+              </a>
+              <div class="book-info">
+                <a href="${bookUrl}"><h3>${title}</h3></a>
+                <p>by ${author}</p>
+                <div class="book-price">₹${price} / month</div>
+                <button class="add-to-cart" type="button"
+                  aria-label="Add ${title} to cart">＋</button>
+              </div>
+            `;
 
-          grid.appendChild(card);
-          existingTitles.add(titleKey);
-        });
+            grid.appendChild(card);
+            existingTitles.add(titleKey);
+          });
 
         count.textContent =
           `${grid.querySelectorAll(".book-card").length} TITLES ON THIS SHELF`;
@@ -264,19 +270,19 @@
     });
   </script>
 
-<script>
-  function updatePageHeight() {
-    document.body.style.setProperty(
-      "--page-height",
-      document.documentElement.scrollHeight - 36 + "px"
-    );
-  }
+  <script>
+    function updatePageHeight() {
+      document.body.style.setProperty(
+        "--page-height",
+        document.documentElement.scrollHeight - 36 + "px"
+      );
+    }
 
-  window.addEventListener("load", updatePageHeight);
-  window.addEventListener("resize", updatePageHeight);
+    window.addEventListener("load", updatePageHeight);
+    window.addEventListener("resize", updatePageHeight);
 
-  new ResizeObserver(updatePageHeight).observe(document.body);
-</script>
-  
+    new ResizeObserver(updatePageHeight).observe(document.body);
+  </script>
+
 </body>
 </html>
