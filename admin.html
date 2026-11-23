@@ -27,6 +27,42 @@
 
   <main class="admin-main" id="adminContent" style="display: none;">
 
+    <!-- LIBRARIAN'S PICK -->
+
+    <section class="admin-card">
+
+      <div class="shelf-mark">✦</div>
+
+      <h2>Librarian’s Pick</h2>
+
+      <p class="admin-intro">
+        Enter the exact title of the book you want to feature.
+      </p>
+
+      <form id="pickForm">
+
+        <label for="librariansPick">Book Title</label>
+
+        <input
+          type="text"
+          id="librariansPick"
+          required
+          placeholder="Enter the exact book title..."
+        >
+
+        <button type="submit" id="savePickButton">
+          Save Librarian’s Pick
+        </button>
+
+        <p id="pickMessage" class="message"></p>
+
+      </form>
+
+    </section>
+
+
+    <!-- ADD A NEW BOOK -->
+
     <section class="admin-card">
 
       <div class="shelf-mark">✦</div>
@@ -155,6 +191,7 @@
 
   </main>
 
+
   <script>
 
     /* =========================
@@ -216,6 +253,145 @@
 
 
     /* =========================
+       LIBRARIAN'S PICK
+    ========================= */
+
+    const pickInput =
+      document.getElementById("librariansPick");
+
+    const pickForm =
+      document.getElementById("pickForm");
+
+    const pickMessage =
+      document.getElementById("pickMessage");
+
+
+    /* LOAD CURRENT PICK */
+
+    async function loadCurrentPick() {
+
+      const { data, error } = await db
+        .from("library_books")
+        .select("title")
+        .eq("is_librarians_pick", true)
+        .limit(1)
+        .maybeSingle();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (data) {
+        pickInput.value = data.title;
+      }
+
+    }
+
+
+    /* SAVE NEW PICK */
+
+    pickForm.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+      const selectedTitle = pickInput.value.trim();
+
+      if (!selectedTitle) {
+        return;
+      }
+
+      const saveButton =
+        document.getElementById("savePickButton");
+
+      saveButton.disabled = true;
+
+      pickMessage.textContent =
+        "Updating Librarian’s Pick...";
+
+      pickMessage.className = "message";
+
+
+      try {
+
+        /*
+          CHECK WHETHER THE BOOK EXISTS
+        */
+
+        const { data: book, error: findError } = await db
+          .from("library_books")
+          .select("title")
+          .eq("title", selectedTitle)
+          .limit(1)
+          .maybeSingle();
+
+        if (findError) {
+          throw findError;
+        }
+
+        if (!book) {
+          throw new Error(
+            "Book not found. Check the title and try again."
+          );
+        }
+
+
+        /*
+          REMOVE THE PREVIOUS PICK
+        */
+
+        const { error: removeError } = await db
+          .from("library_books")
+          .update({
+            is_librarians_pick: false
+          })
+          .eq("is_librarians_pick", true);
+
+        if (removeError) {
+          throw removeError;
+        }
+
+
+        /*
+          SET THE NEW PICK
+        */
+
+        const { error: updateError } = await db
+          .from("library_books")
+          .update({
+            is_librarians_pick: true
+          })
+          .eq("title", selectedTitle);
+
+        if (updateError) {
+          throw updateError;
+        }
+
+
+        pickMessage.textContent =
+          "Librarian’s Pick updated successfully!";
+
+        pickMessage.className = "message success";
+
+      } catch (error) {
+
+        console.error(error);
+
+        pickMessage.textContent =
+          error.message || "Could not update Librarian’s Pick.";
+
+        pickMessage.className = "message error";
+
+      } finally {
+
+        saveButton.disabled = false;
+
+      }
+
+    });
+
+
+    /* =========================
        GENRE SELECTION
     ========================= */
 
@@ -268,6 +444,8 @@
         const allowed = await checkAdmin();
 
         if (!allowed) return;
+
+        await loadCurrentPick();
 
         const form =
           document.getElementById("bookForm");
