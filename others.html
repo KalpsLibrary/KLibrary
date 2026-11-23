@@ -148,6 +148,12 @@
           .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
       }
 
+      function normalizeGenre(genre) {
+        return String(genre || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "");
+      }
+
       function escapeHtml(value) {
         return String(value ?? "").replace(/[&<>"']/g, char => ({
           "&": "&amp;",
@@ -167,13 +173,20 @@
         const { data, error } = await db
           .from("library_books")
           .select("title, author, price, cover_url, available, genre")
-          .eq("genre", "Others")
           .eq("available", true)
           .order("title", { ascending: true });
 
         if (error) throw error;
 
-        (data || []).forEach(book => {
+        const otherBooks = (data || []).filter(book => {
+          const genres = String(book.genre || "")
+            .split(",")
+            .map(genre => normalizeGenre(genre));
+
+          return genres.includes("others");
+        });
+
+        otherBooks.forEach(book => {
           const titleKey = normalizeTitle(book.title);
 
           if (!book.title || existingTitles.has(titleKey)) return;
@@ -181,11 +194,14 @@
           const title = escapeHtml(book.title);
           const author = escapeHtml(book.author || "Unknown author");
           const cover = escapeHtml(book.cover_url || "");
+
           const priceNumber = Number(
             String(book.price ?? "").replace(/[^\d.]/g, "")
           );
           const price = Number.isFinite(priceNumber) ? priceNumber : 50;
-          const bookUrl = "book.html?title=" + encodeURIComponent(book.title);
+
+          const bookUrl =
+            "book.html?title=" + encodeURIComponent(book.title);
 
           const card = document.createElement("article");
           card.className = "book-card";
@@ -242,18 +258,19 @@
     });
   </script>
 
-</body>
   <script>
-  function updatePageHeight() {
-    document.body.style.setProperty(
-      "--page-height",
-      document.documentElement.scrollHeight - 36 + "px"
-    );
-  }
+    function updatePageHeight() {
+      document.body.style.setProperty(
+        "--page-height",
+        document.documentElement.scrollHeight - 36 + "px"
+      );
+    }
 
-  window.addEventListener("load", updatePageHeight);
-  window.addEventListener("resize", updatePageHeight);
+    window.addEventListener("load", updatePageHeight);
+    window.addEventListener("resize", updatePageHeight);
 
-  new ResizeObserver(updatePageHeight).observe(document.body);
-</script>
+    new ResizeObserver(updatePageHeight).observe(document.body);
+  </script>
+
+</body>
 </html>
