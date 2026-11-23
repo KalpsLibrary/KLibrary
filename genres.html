@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KLibrary — Home</title>
   <link rel="stylesheet" href="style.css">
+
   <style>
     .library-search { max-width:760px; margin:24px auto; }
     .library-search label { display:block; margin-bottom:8px; font-weight:600; }
@@ -43,18 +44,44 @@
     .pick-description { color:var(--muted); line-height:1.6; }
     .pick-link { display:inline-block; margin-top:10px; padding:11px 17px; background:#4b3929; color:#fffaf0; text-decoration:none; }
     .pick-link:hover { background:#5d4631; color:#fffaf0; }
-    @media(max-width:900px) { .genre-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .header-actions { gap:4px; } }
-    @media(max-width:620px) { .site-header { align-items:flex-start; flex-direction:column; gap:16px; } .header-actions { justify-content:flex-start; } .header-actions .nav-link { padding:8px; } .genre-grid { grid-template-columns:1fr; } .genre-card { min-height:205px; } .pick-card { flex-direction:column; align-items:flex-start; padding:22px; } .pick-cover-wrap { width:150px; flex-basis:auto; } .pick-cover,.pick-placeholder { height:225px; } .librarian-pick h2 { font-size:34px; } }
-    @media(max-width:480px) { .search-results { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .search-result { padding:10px; } }
-    .search-result p:first-of-type { font-family:"Cormorant Garamond",Georgia,serif; font-size:18px; }
+
+    @media(max-width:900px) {
+      .genre-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .header-actions { gap:4px; }
+    }
+
+    @media(max-width:620px) {
+      .site-header { align-items:flex-start; flex-direction:column; gap:16px; }
+      .header-actions { justify-content:flex-start; }
+      .header-actions .nav-link { padding:8px; }
+      .genre-grid { grid-template-columns:1fr; }
+      .genre-card { min-height:205px; }
+      .pick-card { flex-direction:column; align-items:flex-start; padding:22px; }
+      .pick-cover-wrap { width:150px; flex-basis:auto; }
+      .pick-cover,.pick-placeholder { height:225px; }
+      .librarian-pick h2 { font-size:34px; }
+    }
+
+    @media(max-width:480px) {
+      .search-results { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+      .search-result { padding:10px; }
+    }
+
+    .search-result p:first-of-type {
+      font-family:"Cormorant Garamond",Georgia,serif;
+      font-size:18px;
+    }
   </style>
 </head>
+
 <body class="library-page">
+
   <header class="site-header">
     <div>
       <span class="eyebrow">KLIBRARY</span>
       <h1>The Library</h1>
     </div>
+
     <nav class="header-actions" aria-label="Main navigation">
       <a class="nav-link" href="genres.html" aria-current="page">Home</a>
       <a class="nav-link" href="#genre-grid">Browse</a>
@@ -63,134 +90,582 @@
       <button id="logoutBtn" class="logout">Log out</button>
     </nav>
   </header>
+
   <main class="genre-main">
+
     <p id="welcome" class="welcome" aria-hidden="true"></p>
+
     <p class="intro">Browse the shelves and find your next read.</p>
+
     <section class="library-search" aria-label="Search the library">
       <label for="book-search">Find a book</label>
-      <input id="book-search" type="search" placeholder="Search by title or author..." autocomplete="off">
-      <p id="search-status" class="search-status" aria-live="polite">Search across all available books in KLibrary.</p>
-      <section id="search-results" class="search-results search-hidden" aria-label="Search results"></section>
+
+      <input
+        id="book-search"
+        type="search"
+        placeholder="Search by title or author..."
+        autocomplete="off"
+      >
+
+      <p id="search-status" class="search-status" aria-live="polite">
+        Search across all available books in KLibrary.
+      </p>
+
+      <section
+        id="search-results"
+        class="search-results search-hidden"
+        aria-label="Search results"
+      ></section>
     </section>
+
+
+    <!-- GENRE CARDS -->
+
     <section class="genre-grid" id="genre-grid" aria-label="Browse by genre">
-      <a class="genre-card romantasy" href="romantasy.html"><span class="card-symbol">❦</span><h2>Romantasy</h2><p>Fantasy Romance</p><span class="open">Open the shelf →</span></a>
-      <a class="genre-card thriller" href="thriller.html"><span class="card-symbol">⌕</span><h2>Thrillers &amp; Mystery</h2><p>Secrets, clues &amp; suspense</p><span class="open">Open the shelf →</span></a>
-      <a class="genre-card selfhelp" href="selfhelp.html"><span class="card-symbol">✦</span><h2>Non-fiction and Self-Help</h2><p>Inspiration and ideas for growing and learning.</p><span class="open">Open the shelf →</span></a>
-      <a class="genre-card specialeditions" href="specialeditions.html"><span class="card-symbol">✧</span><h2>Special Editions</h2><p>Beautiful editions, collector's copies and books with something extra.</p><span class="open">Open the shelf →</span></a>
-      <a class="genre-card comics" href="comics.html"><span class="card-symbol">❖</span><h2>Comics</h2><p>Fun characters and ridiculous adventures.</p><span class="open">Open the shelf →</span></a>
-      <a class="genre-card others" href="others.html"><span class="card-symbol">❧</span><h2>Others</h2><p>Everything beyond the shelves.</p><span class="open">Open the shelf →</span></a>
+
+      <a class="genre-card romantasy" href="romantasy.html">
+        <span class="card-symbol">❦</span>
+        <h2>Romantasy</h2>
+        <p>Fantasy Romance</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
+      <a class="genre-card thriller" href="thriller.html">
+        <span class="card-symbol">⌕</span>
+        <h2>Thrillers &amp; Mystery</h2>
+        <p>Secrets, clues &amp; suspense</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
+      <a class="genre-card selfhelp" href="selfhelp.html">
+        <span class="card-symbol">✦</span>
+        <h2>Non-fiction and Self-Help</h2>
+        <p>Inspiration and ideas for growing and learning.</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
+      <a class="genre-card specialeditions" href="specialeditions.html">
+        <span class="card-symbol">✧</span>
+        <h2>Special Editions</h2>
+        <p>Beautiful editions, collector's copies and books with something extra.</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
+      <a class="genre-card comics" href="comics.html">
+        <span class="card-symbol">❖</span>
+        <h2>Comics</h2>
+        <p>Fun characters and ridiculous adventures.</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
+      <a class="genre-card others" href="others.html">
+        <span class="card-symbol">❧</span>
+        <h2>Others</h2>
+        <p>Everything beyond the shelves.</p>
+        <span class="open">Open the shelf →</span>
+      </a>
+
     </section>
+
+
+    <!-- LIBRARIAN'S PICK -->
+
     <section class="librarian-pick" aria-labelledby="pick-heading">
+
       <p class="pick-kicker">A book selected for you</p>
+
       <h2 id="pick-heading">The Librarian’s Pick</h2>
+
       <article class="pick-card" id="pick-card" aria-live="polite">
-        <div class="pick-cover-wrap"><div class="pick-placeholder">The Librarian’s Pick</div></div>
-        <div class="pick-info"><h3>Never Lie</h3><p class="pick-author">Freida McFadden</p><p class="pick-description">A psychological thriller chosen for this month’s featured shelf.</p><p class="pick-price" id="pick-price">Loading price…</p><a class="pick-link" id="pick-link" href="thriller.html">Discover the book →</a><p id="pick-status" class="small-note"></p></div>
+
+        <div class="pick-cover-wrap">
+          <div class="pick-placeholder">The Librarian’s Pick</div>
+        </div>
+
+        <div class="pick-info">
+
+          <h3 id="pick-title">Loading...</h3>
+
+          <p class="pick-author" id="pick-author"></p>
+
+          <p class="pick-description" id="pick-description"></p>
+
+          <p class="pick-price" id="pick-price">Loading price…</p>
+
+          <a class="pick-link" id="pick-link" href="#">
+            Discover the book →
+          </a>
+
+          <p id="pick-status" class="small-note"></p>
+
+        </div>
+
       </article>
+
     </section>
+
   </main>
+
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
   <script src="cart.js"></script>
+
+
   <script>
+
     document.addEventListener("DOMContentLoaded", () => {
-      const searchInput = document.getElementById("book-search");
-      const status = document.getElementById("search-status");
-      const results = document.getElementById("search-results");
-      const genreGrid = document.getElementById("genre-grid");
-      const pickPrice = document.getElementById("pick-price");
-      const pickLink = document.getElementById("pick-link");
-      const pickStatus = document.getElementById("pick-status");
-      const pickCoverWrap = document.querySelector(".pick-cover-wrap");
+
+      const searchInput =
+        document.getElementById("book-search");
+
+      const status =
+        document.getElementById("search-status");
+
+      const results =
+        document.getElementById("search-results");
+
+      const genreGrid =
+        document.getElementById("genre-grid");
+
+      const pickPrice =
+        document.getElementById("pick-price");
+
+      const pickLink =
+        document.getElementById("pick-link");
+
+      const pickStatus =
+        document.getElementById("pick-status");
+
+      const pickCoverWrap =
+        document.querySelector(".pick-cover-wrap");
+
+      const pickTitle =
+        document.getElementById("pick-title");
+
+      const pickAuthor =
+        document.getElementById("pick-author");
+
+      const pickDescription =
+        document.getElementById("pick-description");
+
+
       let books = [];
       let searchLoaded = false;
       let searchFailed = false;
       let debounceTimer;
-      function normalize(value) { return String(value || "").normalize("NFC").toLowerCase().trim(); }
+
+
+      function normalize(value) {
+        return String(value || "")
+          .normalize("NFC")
+          .toLowerCase()
+          .trim();
+      }
+
+
       function escapeHtml(value) {
-        return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+
+        return String(value ?? "").replace(
+          /[&<>"']/g,
+          char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+          })[char]
+        );
+
       }
+
+
+      /* =========================
+         RENDER LIBRARIAN'S PICK
+      ========================= */
+
       function renderPick() {
-        const book = books.find(item => normalize(item.title) === "never lie");
+
+        const book = books.find(
+          item => item.is_librarians_pick === true
+        );
+
+
         if (!book) {
-          pickPrice.textContent = "Price unavailable";
-          pickStatus.textContent = "Add Never Lie to the available books in the catalogue to show its current price and cover here.";
+
+          pickTitle.textContent = "No book selected yet";
+
+          pickAuthor.textContent = "";
+
+          pickDescription.textContent =
+            "The Librarian’s Pick will appear here once a book has been selected.";
+
+          pickPrice.textContent = "";
+
+          pickLink.style.display = "none";
+
+          pickCoverWrap.replaceChildren();
+
+          const placeholder = document.createElement("div");
+
+          placeholder.className = "pick-placeholder";
+
+          placeholder.textContent = "The Librarian’s Pick";
+
+          pickCoverWrap.appendChild(placeholder);
+
+          pickStatus.textContent = "";
+
           return;
         }
-        const numericPrice = Number(String(book.price ?? "").replace(/[^\d.]/g, ""));
-        pickPrice.textContent = Number.isFinite(numericPrice) && String(book.price ?? "").trim() !== "" ? `₹${numericPrice} / month` : (book.price ? `${escapeHtml(book.price)} / month` : "Price unavailable");
-        pickLink.href = "book.html?title=" + encodeURIComponent(book.title);
-        pickLink.textContent = "Discover Never Lie →";
-        if (true) {
+
+
+        /* BOOK DETAILS */
+
+        pickTitle.textContent = book.title || "";
+
+        pickAuthor.textContent =
+          book.author ? `By ${book.author}` : "";
+
+        pickDescription.textContent =
+          book.description || "";
+
+
+        /* PRICE */
+
+        const numericPrice = Number(
+          String(book.price ?? "").replace(/[^\d.]/g, "")
+        );
+
+        if (
+          Number.isFinite(numericPrice) &&
+          String(book.price ?? "").trim() !== ""
+        ) {
+
+          pickPrice.textContent =
+            `₹${numericPrice} / month`;
+
+        } else {
+
+          pickPrice.textContent = "Price unavailable";
+
+        }
+
+
+        /* BOOK PAGE LINK */
+
+        pickLink.href =
+          "book.html?title=" + encodeURIComponent(book.title);
+
+        pickLink.textContent = "Discover the book →";
+
+        pickLink.style.display = "inline-block";
+
+
+        /* BOOK COVER */
+
+        pickCoverWrap.replaceChildren();
+
+        if (book.cover_url) {
+
           const img = document.createElement("img");
+
           img.className = "pick-cover";
-          img.src = "neverlie.jpg";
-          img.alt = "Cover of Never Lie by Freida McFadden";
+
+          img.src = book.cover_url;
+
+          img.alt = `Cover of ${book.title}`;
+
           img.loading = "lazy";
-          img.onerror = () => { pickCoverWrap.replaceChildren(); const placeholder = document.createElement("div"); placeholder.className = "pick-placeholder"; placeholder.textContent = "Never Lie"; pickCoverWrap.appendChild(placeholder); };
-          pickCoverWrap.replaceChildren(img);
+
+          img.onerror = () => {
+
+            pickCoverWrap.replaceChildren();
+
+            const placeholder = document.createElement("div");
+
+            placeholder.className = "pick-placeholder";
+
+            placeholder.textContent = book.title;
+
+            pickCoverWrap.appendChild(placeholder);
+
+          };
+
+          pickCoverWrap.appendChild(img);
+
+        } else {
+
+          const placeholder = document.createElement("div");
+
+          placeholder.className = "pick-placeholder";
+
+          placeholder.textContent = book.title;
+
+          pickCoverWrap.appendChild(placeholder);
+
         }
+
+
         pickStatus.textContent = "";
+
       }
+
+
+      /* =========================
+         SEARCH RESULTS
+      ========================= */
+
       function renderResults(matches, query) {
+
         results.replaceChildren();
+
         if (!matches.length) {
+
           results.classList.add("search-hidden");
-          status.textContent = `No books found for "${query}". Try another title or author, or browse the genre shelves below.`;
+
+          status.textContent =
+            `No books found for "${query}". Try another title or author, or browse the genre shelves below.`;
+
           return;
         }
+
         results.classList.remove("search-hidden");
-        status.textContent = `${matches.length} matching book${matches.length === 1 ? "" : "s"} found.`;
+
+        status.textContent =
+          `${matches.length} matching book${matches.length === 1 ? "" : "s"} found.`;
+
+
         matches.forEach(book => {
-          const card = document.createElement("article"); card.className = "search-result";
-          if (book.cover_url) { const img = document.createElement("img"); img.src = book.cover_url; img.alt = `Cover of ${book.title || "book"}`; img.loading = "lazy"; card.appendChild(img); }
-          const title = escapeHtml(book.title); const author = escapeHtml(book.author || "Unknown author"); const genre = escapeHtml(book.genre || "Other");
-          const priceValue = Number(String(book.price ?? "").replace(/[^\d.]/g, "")); const price = Number.isFinite(priceValue) ? priceValue : null;
-          const link = "book.html?title=" + encodeURIComponent(book.title);
-          card.insertAdjacentHTML("beforeend", `<h3>${title}</h3><p>by ${author}</p><p>${genre}</p><p>${price !== null ? `₹${price} / month` : "Price unavailable"}</p><a class="result-link" href="${link}">View book →</a>`);
+
+          const card = document.createElement("article");
+
+          card.className = "search-result";
+
+
+          if (book.cover_url) {
+
+            const img = document.createElement("img");
+
+            img.src = book.cover_url;
+
+            img.alt = `Cover of ${book.title || "book"}`;
+
+            img.loading = "lazy";
+
+            card.appendChild(img);
+
+          }
+
+
+          const title = escapeHtml(book.title);
+
+          const author = escapeHtml(book.author || "Unknown author");
+
+          const genre = escapeHtml(book.genre || "Other");
+
+          const priceValue = Number(
+            String(book.price ?? "").replace(/[^\d.]/g, "")
+          );
+
+          const price = Number.isFinite(priceValue)
+            ? priceValue
+            : null;
+
+          const link =
+            "book.html?title=" + encodeURIComponent(book.title);
+
+
+          card.insertAdjacentHTML(
+            "beforeend",
+            `
+              <h3>${title}</h3>
+              <p>by ${author}</p>
+              <p>${genre}</p>
+              <p>${price !== null ? `₹${price} / month` : "Price unavailable"}</p>
+              <a class="result-link" href="${link}">View book →</a>
+            `
+          );
+
           results.appendChild(card);
+
         });
+
       }
+
+
+      /* =========================
+         LOAD BOOKS FROM SUPABASE
+      ========================= */
+
       async function loadBooks() {
+
         try {
-          if (typeof db === "undefined") throw new Error("Supabase client 'db' was not found.");
-          const { data, error } = await db.from("library_books").select("title, author, price, cover_url, genre, available").eq("available", true).order("title", { ascending: true });
-          if (error) throw error;
-          books = data || []; searchLoaded = true; searchFailed = false;
-          status.textContent = `Search across ${books.length} available book${books.length === 1 ? "" : "s"}.`;
+
+          if (typeof db === "undefined") {
+            throw new Error("Supabase client 'db' was not found.");
+          }
+
+
+          const { data, error } = await db
+            .from("library_books")
+            .select(`
+              title,
+              author,
+              price,
+              cover_url,
+              description,
+              genre,
+              available,
+              is_librarians_pick
+            `)
+            .eq("available", true)
+            .order("title", { ascending: true });
+
+
+          if (error) {
+            throw error;
+          }
+
+
+          books = data || [];
+
+          searchLoaded = true;
+
+          searchFailed = false;
+
+
+          status.textContent =
+            `Search across ${books.length} available book${books.length === 1 ? "" : "s"}.`;
+
+
           renderPick();
-          if (searchInput.value.trim()) performSearch();
+
+
+          if (searchInput.value.trim()) {
+            performSearch();
+          }
+
         } catch (error) {
-          console.error("Could not load books for search or librarian's pick:", error);
+
+          console.error(
+            "Could not load books for search or Librarian’s Pick:",
+            error
+          );
+
           searchFailed = true;
-          status.textContent = "Search is temporarily unavailable. Please try again later.";
-          pickPrice.textContent = "Price unavailable";
-          pickStatus.textContent = "The catalogue could not be loaded. Please refresh the page later.";
+
+          status.textContent =
+            "Search is temporarily unavailable. Please try again later.";
+
+          pickTitle.textContent =
+            "Could not load Librarian’s Pick";
+
+          pickPrice.textContent =
+            "Price unavailable";
+
+          pickStatus.textContent =
+            "The catalogue could not be loaded. Please refresh the page later.";
+
         }
+
       }
+
+
+      /* =========================
+         PERFORM SEARCH
+      ========================= */
+
       function performSearch() {
+
         const query = normalize(searchInput.value);
+
+
         if (!query) {
-          results.replaceChildren(); results.classList.add("search-hidden"); genreGrid.classList.remove("search-hidden");
-          status.textContent = searchLoaded ? `Search across ${books.length} available book${books.length === 1 ? "" : "s"}.` : "Search across all available books in KLibrary.";
+
+          results.replaceChildren();
+
+          results.classList.add("search-hidden");
+
+          genreGrid.classList.remove("search-hidden");
+
+          status.textContent = searchLoaded
+            ? `Search across ${books.length} available book${books.length === 1 ? "" : "s"}.`
+            : "Search across all available books in KLibrary.";
+
           return;
         }
-        genreGrid.classList.add("search-hidden"); results.classList.remove("search-hidden");
-        if (searchFailed) { status.textContent = "We couldn't load the catalogue. Please refresh the page and try again."; return; }
-        if (!searchLoaded) { status.textContent = "Loading books..."; return; }
-        const matches = books.filter(book => normalize(book.title).includes(query) || normalize(book.author).includes(query) || normalize(book.genre).includes(query));
+
+
+        genreGrid.classList.add("search-hidden");
+
+        results.classList.remove("search-hidden");
+
+
+        if (searchFailed) {
+
+          status.textContent =
+            "We couldn't load the catalogue. Please refresh the page and try again.";
+
+          return;
+        }
+
+
+        if (!searchLoaded) {
+
+          status.textContent = "Loading books...";
+
+          return;
+        }
+
+
+        const matches = books.filter(book =>
+          normalize(book.title).includes(query) ||
+          normalize(book.author).includes(query) ||
+          normalize(book.genre).includes(query)
+        );
+
+
         renderResults(matches, searchInput.value.trim());
+
       }
-      searchInput.addEventListener("input", () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(performSearch, 150); });
+
+
+      searchInput.addEventListener("input", () => {
+
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(performSearch, 150);
+
+      });
+
+
       loadBooks();
+
     });
+
   </script>
+
+
   <script>
-    function updatePageHeight() { document.body.style.setProperty("--page-height", document.documentElement.scrollHeight - 36 + "px"); }
+
+    function updatePageHeight() {
+
+      document.body.style.setProperty(
+        "--page-height",
+        document.documentElement.scrollHeight - 36 + "px"
+      );
+
+    }
+
     window.addEventListener("load", updatePageHeight);
+
     window.addEventListener("resize", updatePageHeight);
+
     new ResizeObserver(updatePageHeight).observe(document.body);
+
   </script>
+
 </body>
 </html>
