@@ -41,7 +41,6 @@
     .pick-info h3 { margin:0 0 8px; font:600 34px/1.1 "Cormorant Garamond",Georgia,serif; }
     .pick-author { margin:0 0 16px; color:var(--muted); font:19px "Cormorant Garamond",Georgia,serif; }
     .pick-price { color:var(--gold); font-weight:700; letter-spacing:.5px; }
-    .pick-description { color:var(--muted); line-height:1.6; }
     .pick-link { display:inline-block; margin-top:10px; padding:11px 17px; background:#4b3929; color:#fffaf0; text-decoration:none; }
     .pick-link:hover { background:#5d4631; color:#fffaf0; }
 
@@ -188,8 +187,6 @@
 
           <p class="pick-author" id="pick-author"></p>
 
-          <p class="pick-description" id="pick-description"></p>
-
           <p class="pick-price" id="pick-price">Loading price…</p>
 
           <a class="pick-link" id="pick-link" href="#">
@@ -247,9 +244,6 @@
       const pickAuthor =
         document.getElementById("pick-author");
 
-      const pickDescription =
-        document.getElementById("pick-description");
-
 
       let books = [];
       let searchLoaded = false;
@@ -298,9 +292,6 @@
 
           pickAuthor.textContent = "";
 
-          pickDescription.textContent =
-            "The Librarian’s Pick will appear here once a book has been selected.";
-
           pickPrice.textContent = "";
 
           pickLink.style.display = "none";
@@ -327,9 +318,6 @@
 
         pickAuthor.textContent =
           book.author ? `By ${book.author}` : "";
-
-        pickDescription.textContent =
-          book.description || "";
 
 
         /* PRICE */
