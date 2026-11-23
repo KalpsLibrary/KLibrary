@@ -30,7 +30,6 @@
     <!-- LIBRARIAN'S PICK -->
 
     <section class="admin-card">
-
       <div class="shelf-mark">✦</div>
 
       <h2>Librarian’s Pick</h2>
@@ -54,17 +53,15 @@
           Save Librarian’s Pick
         </button>
 
-        <p id="pickMessage" class="message"></p>
+        <p id="pickMessage" class="message" aria-live="polite"></p>
 
       </form>
-
     </section>
 
 
     <!-- ADD A NEW BOOK -->
 
     <section class="admin-card">
-
       <div class="shelf-mark">✦</div>
 
       <h2>Add a New Book</h2>
@@ -179,14 +176,13 @@
           required
         >
 
-        <button type="submit">
+        <button type="submit" id="addBookButton">
           Add Book
         </button>
 
-        <p id="adminMessage" class="message"></p>
+        <p id="adminMessage" class="message" aria-live="polite"></p>
 
       </form>
-
     </section>
 
   </main>
@@ -195,11 +191,10 @@
   <script>
 
     /* =========================
-       YOUR ADMIN ACCOUNT
+       ADMIN ACCOUNT
     ========================= */
 
-    const ADMIN_UID =
-      "55df0ebb-50a3-4cd3-a674-6253c097f0c4";
+    const ADMIN_UID = "55df0ebb-50a3-4cd3-a674-6253c097f0c4";
 
 
     /* =========================
@@ -221,11 +216,11 @@
 
         document.body.innerHTML = `
           <main style="
-            min-height:100vh;
-            display:grid;
-            place-items:center;
-            text-align:center;
-            padding:30px;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 30px;
           ">
             <div>
               <h1>Access Denied</h1>
@@ -235,9 +230,7 @@
                 to access the KLibrary admin page.
               </p>
 
-              <a href="genres.html">
-                Return to KLibrary
-              </a>
+              <a href="genres.html">Return to KLibrary</a>
             </div>
           </main>
         `;
@@ -245,8 +238,7 @@
         return false;
       }
 
-      document.getElementById("adminContent").style.display =
-        "block";
+      document.getElementById("adminContent").style.display = "block";
 
       return true;
     }
@@ -256,14 +248,10 @@
        LIBRARIAN'S PICK
     ========================= */
 
-    const pickInput =
-      document.getElementById("librariansPick");
-
-    const pickForm =
-      document.getElementById("pickForm");
-
-    const pickMessage =
-      document.getElementById("pickMessage");
+    const pickInput = document.getElementById("librariansPick");
+    const pickForm = document.getElementById("pickForm");
+    const pickMessage = document.getElementById("pickMessage");
+    const savePickButton = document.getElementById("savePickButton");
 
 
     /* LOAD CURRENT PICK */
@@ -278,14 +266,13 @@
         .maybeSingle();
 
       if (error) {
-        console.error(error);
+        console.error("Could not load current pick:", error);
         return;
       }
 
       if (data) {
         pickInput.value = data.title;
       }
-
     }
 
 
@@ -297,54 +284,44 @@
 
       const selectedTitle = pickInput.value.trim();
 
-      if (!selectedTitle) {
-        return;
-      }
+      if (!selectedTitle) return;
 
-      const saveButton =
-        document.getElementById("savePickButton");
-
-      saveButton.disabled = true;
-
-      pickMessage.textContent =
-        "Updating Librarian’s Pick...";
-
+      savePickButton.disabled = true;
+      pickMessage.textContent = "Updating Librarian’s Pick...";
       pickMessage.className = "message";
-
 
       try {
 
-        /*
-          CHECK WHETHER THE BOOK EXISTS
-        */
+        // CHECK WHETHER THE BOOK EXISTS AND HAS A UNIQUE TITLE
 
-        const { data: book, error: findError } = await db
+        const { data: matchingBooks, error: findError } = await db
           .from("library_books")
           .select("title")
           .eq("title", selectedTitle)
-          .limit(1)
-          .maybeSingle();
+          .limit(2);
 
         if (findError) {
           throw findError;
         }
 
-        if (!book) {
+        if (!matchingBooks || matchingBooks.length === 0) {
           throw new Error(
             "Book not found. Check the title and try again."
           );
         }
 
+        if (matchingBooks.length > 1) {
+          throw new Error(
+            "Multiple books have this exact title. Please make the titles unique before selecting one."
+          );
+        }
 
-        /*
-          REMOVE THE PREVIOUS PICK
-        */
+
+        // REMOVE THE PREVIOUS PICK
 
         const { error: removeError } = await db
           .from("library_books")
-          .update({
-            is_librarians_pick: false
-          })
+          .update({ is_librarians_pick: false })
           .eq("is_librarians_pick", true);
 
         if (removeError) {
@@ -352,21 +329,16 @@
         }
 
 
-        /*
-          SET THE NEW PICK
-        */
+        // SET THE NEW PICK
 
         const { error: updateError } = await db
           .from("library_books")
-          .update({
-            is_librarians_pick: true
-          })
+          .update({ is_librarians_pick: true })
           .eq("title", selectedTitle);
 
         if (updateError) {
           throw updateError;
         }
-
 
         pickMessage.textContent =
           "Librarian’s Pick updated successfully!";
@@ -384,7 +356,7 @@
 
       } finally {
 
-        saveButton.disabled = false;
+        savePickButton.disabled = false;
 
       }
 
@@ -416,8 +388,7 @@
       specialFeaturesSection.style.display =
         specialEditionSelected ? "block" : "none";
 
-      specialFeaturesInput.required =
-        specialEditionSelected;
+      specialFeaturesInput.required = specialEditionSelected;
 
       if (!specialEditionSelected) {
         specialFeaturesInput.value = "";
@@ -437,191 +408,166 @@
        ADD BOOK
     ========================= */
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      async () => {
+    document.addEventListener("DOMContentLoaded", async () => {
 
-        const allowed = await checkAdmin();
+      const allowed = await checkAdmin();
 
-        if (!allowed) return;
+      if (!allowed) return;
 
-        await loadCurrentPick();
+      await loadCurrentPick();
 
-        const form =
-          document.getElementById("bookForm");
-
-        const message =
-          document.getElementById("adminMessage");
+      const form = document.getElementById("bookForm");
+      const message = document.getElementById("adminMessage");
+      const addBookButton = document.getElementById("addBookButton");
 
 
-        form.addEventListener(
-          "submit",
-          async (event) => {
+      form.addEventListener("submit", async (event) => {
 
-            event.preventDefault();
+        event.preventDefault();
 
-            message.textContent = "Adding book...";
-            message.className = "message";
-
-
-            const title =
-              document.getElementById("title")
-                .value.trim();
-
-            const author =
-              document.getElementById("author")
-                .value.trim();
-
-            const price =
-              Number(
-                document.getElementById("price").value
-              );
-
-            const selectedGenres =
-              Array.from(genreCheckboxes)
-                .filter(checkbox => checkbox.checked)
-                .map(checkbox => checkbox.value);
-
-            const genre =
-              selectedGenres.join(", ");
-
-            const description =
-              document.getElementById("description")
-                .value.trim();
-
-            const specialEditionSelected =
-              selectedGenres.includes("Special Editions");
-
-            const specialFeatures =
-              specialFeaturesInput.value
-                .split(/\r?\n/)
-                .map(feature => feature.trim())
-                .filter(Boolean)
-                .join("\n");
-
-            const coverFile =
-              document.getElementById("cover")
-                .files[0];
+        message.textContent = "Adding book...";
+        message.className = "message";
+        addBookButton.disabled = true;
 
 
-            if (selectedGenres.length === 0) {
+        const title = document.getElementById("title").value.trim();
+        const author = document.getElementById("author").value.trim();
+        const price = Number(document.getElementById("price").value);
 
-              message.textContent =
-                "Please select at least one genre.";
+        const selectedGenres = Array.from(genreCheckboxes)
+          .filter(checkbox => checkbox.checked)
+          .map(checkbox => checkbox.value);
 
-              message.className = "message error";
+        const genre = selectedGenres.join(", ");
 
-              return;
-            }
+        const description =
+          document.getElementById("description").value.trim();
 
+        const specialEditionSelected =
+          selectedGenres.includes("Special Editions");
 
-            if (specialEditionSelected && !specialFeatures) {
+        const specialFeatures = specialFeaturesInput.value
+          .split(/\r?\n/)
+          .map(feature => feature.trim())
+          .filter(Boolean)
+          .join("\n");
 
-              message.textContent =
-                "Please enter what's special about this edition.";
-
-              message.className = "message error";
-
-              return;
-            }
-
-
-            if (!coverFile) {
-
-              message.textContent =
-                "Please choose a cover image.";
-
-              message.className = "message error";
-
-              return;
-            }
+        const coverFile = document.getElementById("cover").files[0];
 
 
-            try {
+        // VALIDATE GENRES
 
-              /* UPLOAD COVER */
+        if (selectedGenres.length === 0) {
 
-              const fileName =
-                `${Date.now()}-${coverFile.name.replace(
-                  /[^a-zA-Z0-9._-]/g,
-                  ""
-                )}`;
-
-              const {
-                error: uploadError
-              } = await db.storage
-                .from("book-covers")
-                .upload(fileName, coverFile);
-
-              if (uploadError) {
-                throw uploadError;
-              }
+          message.textContent = "Please select at least one genre.";
+          message.className = "message error";
+          addBookButton.disabled = false;
+          return;
+        }
 
 
-              /* GET COVER URL */
+        // VALIDATE SPECIAL FEATURES
 
-              const {
-                data: { publicUrl }
-              } = db.storage
-                .from("book-covers")
-                .getPublicUrl(fileName);
+        if (specialEditionSelected && !specialFeatures) {
 
+          message.textContent =
+            "Please enter what's special about this edition.";
 
-              /* ADD BOOK TO DATABASE */
-
-              const {
-                error: bookError
-              } = await db
-                .from("library_books")
-                .insert({
-
-                  title: title,
-                  author: author,
-                  price: price,
-                  genre: genre,
-                  description: description,
-                  cover_url: publicUrl,
-                  available: true,
-
-                  special_features:
-                    specialEditionSelected
-                      ? specialFeatures
-                      : null
-
-                });
-
-              if (bookError) {
-                throw bookError;
-              }
+          message.className = "message error";
+          addBookButton.disabled = false;
+          return;
+        }
 
 
-              /* SUCCESS */
+        // VALIDATE COVER
 
-              message.textContent =
-                "Book added successfully!";
+        if (!coverFile) {
 
-              message.className = "message success";
+          message.textContent = "Please choose a cover image.";
+          message.className = "message error";
+          addBookButton.disabled = false;
+          return;
+        }
 
-              form.reset();
 
-              updateSpecialFeaturesVisibility();
+        try {
 
-            } catch (error) {
+          // UPLOAD COVER
 
-              console.error(error);
+          const fileName = `${Date.now()}-${coverFile.name.replace(
+            /[^a-zA-Z0-9._-]/g,
+            ""
+          )}`;
 
-              message.textContent =
-                error.message || "Something went wrong.";
+          const { error: uploadError } = await db.storage
+            .from("book-covers")
+            .upload(fileName, coverFile);
 
-              message.className = "message error";
-
-            }
-
+          if (uploadError) {
+            throw uploadError;
           }
-        );
 
-      }
-    );
+
+          // GET COVER URL
+
+          const {
+            data: { publicUrl }
+          } = db.storage
+            .from("book-covers")
+            .getPublicUrl(fileName);
+
+
+          // ADD BOOK TO DATABASE
+
+          const { error: bookError } = await db
+            .from("library_books")
+            .insert({
+
+              title,
+              author,
+              price,
+              genre,
+              description,
+              cover_url: publicUrl,
+              available: true,
+
+              special_features: specialEditionSelected
+                ? specialFeatures
+                : null
+
+            });
+
+          if (bookError) {
+            throw bookError;
+          }
+
+
+          // SUCCESS
+
+          message.textContent = "Book added successfully!";
+          message.className = "message success";
+
+          form.reset();
+          updateSpecialFeaturesVisibility();
+
+        } catch (error) {
+
+          console.error(error);
+
+          message.textContent =
+            error.message || "Something went wrong.";
+
+          message.className = "message error";
+
+        } finally {
+
+          addBookButton.disabled = false;
+
+        }
+
+      });
+
+    });
 
   </script>
 
