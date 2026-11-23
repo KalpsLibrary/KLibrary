@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -233,112 +232,127 @@
   <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
   <script src="cart.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-  const grid = document.getElementById("book-grid");
-  const count = document.getElementById("book-count");
 
-  const existingTitles = new Set(
-    Array.from(grid.querySelectorAll(".book-info h3"))
-      .map(heading => normalizeTitle(heading.textContent))
-  );
-
- function normalizeTitle(title) {
-  return String(title || "")
-    .normalize("NFC")
-    .toLowerCase()
-    .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
-}
-
-  function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>"']/g, char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    })[char]);
-  }
-
-  try {
-    const { data, error } = await db
-      .from("library_books")
-      .select("title, author, price, cover_url, available, genre")
-      .eq("genre", "Self-help")
-      .eq("available", true)
-      .order("title", { ascending: true });
-
-    if (error) throw error;
-
-    console.log("Self-Help books returned:", data.length);
-    console.log("Self-Help titles:", data.map(book => book.title));
-
-    (data || []).forEach(book => {
-      const titleKey = normalizeTitle(book.title);
-
-      if (!book.title || existingTitles.has(titleKey)) return;
-
-      const title = escapeHtml(book.title);
-      const author = escapeHtml(book.author || "Unknown author");
-      const cover = escapeHtml(book.cover_url || "");
-
-      const priceNumber = Number(
-        String(book.price ?? "").replace(/[^\d.]/g, "")
-      );
-      const price = Number.isFinite(priceNumber) ? priceNumber : 50;
-
-      const bookUrl =
-        "book.html?title=" + encodeURIComponent(book.title);
-
-      const card = document.createElement("article");
-      card.className = "book-card";
-
-      card.innerHTML = `
-        <div class="book-spine">✦</div>
-        <a href="${bookUrl}">
-          <img class="book-cover"
-               src="${cover}"
-               alt="${title} by ${author}">
-        </a>
-        <div class="book-info">
-          <a href="${bookUrl}"><h3>${title}</h3></a>
-          <p>by ${author}</p>
-          <div class="book-price">₹${price} / month</div>
-          <button class="add-to-cart" type="button"
-            aria-label="Add ${title} to cart">＋</button>
-        </div>`;
-
-      grid.appendChild(card);
-      existingTitles.add(titleKey);
-    });
-
-    const total = grid.querySelectorAll(".book-card").length;
-    count.textContent = `${total} TITLES ON THIS SHELF`;
-
-  } catch (error) {
-    console.error(
-      "Could not load Self-Help books from Supabase:",
-      error
-    );
-  }
-
-  if (typeof refreshCartCount === "function") {
-    await refreshCartCount();
-  }
-});
-</script>
   <script>
-  function updatePageHeight() {
-    document.body.style.setProperty(
-      "--page-height",
-      document.documentElement.scrollHeight - 36 + "px"
-    );
-  }
+    document.addEventListener("DOMContentLoaded", async () => {
+      const grid = document.getElementById("book-grid");
+      const count = document.getElementById("book-count");
 
-  window.addEventListener("load", updatePageHeight);
-  window.addEventListener("resize", updatePageHeight);
+      const existingTitles = new Set(
+        Array.from(grid.querySelectorAll(".book-info h3"))
+          .map(heading => normalizeTitle(heading.textContent))
+      );
 
-  new ResizeObserver(updatePageHeight).observe(document.body);
-</script>
+      function normalizeTitle(title) {
+        return String(title || "")
+          .normalize("NFC")
+          .toLowerCase()
+          .replace(/[^\p{L}\p{M}\p{N}]/gu, "");
+      }
+
+      function normalizeGenre(genre) {
+        return String(genre || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "");
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        })[char]);
+      }
+
+      try {
+        const { data, error } = await db
+          .from("library_books")
+          .select("title, author, price, cover_url, available, genre")
+          .eq("available", true)
+          .order("title", { ascending: true });
+
+        if (error) throw error;
+
+        const selfHelpBooks = (data || []).filter(book => {
+          const genres = String(book.genre || "")
+            .split(",")
+            .map(genre => normalizeGenre(genre));
+
+          return genres.includes("selfhelp");
+        });
+
+        console.log("Self-Help books returned:", selfHelpBooks.length);
+        console.log("Self-Help titles:", selfHelpBooks.map(book => book.title));
+
+        selfHelpBooks.forEach(book => {
+          const titleKey = normalizeTitle(book.title);
+
+          if (!book.title || existingTitles.has(titleKey)) return;
+
+          const title = escapeHtml(book.title);
+          const author = escapeHtml(book.author || "Unknown author");
+          const cover = escapeHtml(book.cover_url || "");
+
+          const priceNumber = Number(
+            String(book.price ?? "").replace(/[^\d.]/g, "")
+          );
+          const price = Number.isFinite(priceNumber) ? priceNumber : 50;
+
+          const bookUrl =
+            "book.html?title=" + encodeURIComponent(book.title);
+
+          const card = document.createElement("article");
+          card.className = "book-card";
+
+          card.innerHTML = `
+            <div class="book-spine">✦</div>
+            <a href="${bookUrl}">
+              <img class="book-cover"
+                   src="${cover}"
+                   alt="${title} by ${author}">
+            </a>
+            <div class="book-info">
+              <a href="${bookUrl}"><h3>${title}</h3></a>
+              <p>by ${author}</p>
+              <div class="book-price">₹${price} / month</div>
+              <button class="add-to-cart" type="button"
+                aria-label="Add ${title} to cart">＋</button>
+            </div>`;
+
+          grid.appendChild(card);
+          existingTitles.add(titleKey);
+        });
+
+        const total = grid.querySelectorAll(".book-card").length;
+        count.textContent = `${total} TITLES ON THIS SHELF`;
+
+      } catch (error) {
+        console.error(
+          "Could not load Self-Help books from Supabase:",
+          error
+        );
+      }
+
+      if (typeof refreshCartCount === "function") {
+        await refreshCartCount();
+      }
+    });
+  </script>
+
+  <script>
+    function updatePageHeight() {
+      document.body.style.setProperty(
+        "--page-height",
+        document.documentElement.scrollHeight - 36 + "px"
+      );
+    }
+
+    window.addEventListener("load", updatePageHeight);
+    window.addEventListener("resize", updatePageHeight);
+
+    new ResizeObserver(updatePageHeight).observe(document.body);
+  </script>
 </body>
 </html>
